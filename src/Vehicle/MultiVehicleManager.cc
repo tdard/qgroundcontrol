@@ -398,3 +398,10 @@ bool MultiVehicleManager::linkInUse(LinkInterface* link, Vehicle* skipVehicle)
 
     return false;
 }
+
+
+// GDP
+void MultiVehicleManager::strategeCommandHandler(mavlink_message_t& message)
+{
+
+}

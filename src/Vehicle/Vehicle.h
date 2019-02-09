@@ -1181,6 +1181,10 @@ signals:
     void requestProtocolVersion(unsigned version);
     void mavlinkStatusChanged();
 
+    //GDP
+    //Notifies the Stratege on certain information
+    void notifyStratege(mavlink_message_t& message);
+
 private slots:
     void _mavlinkMessageReceived(LinkInterface* link, mavlink_message_t message);
     void _linkInactiveOrDeleted(LinkInterface* link);
@@ -1257,6 +1261,11 @@ private:
     void _handleEstimatorStatus(mavlink_message_t& message);
     void _handleStatusText(mavlink_message_t& message, bool longVersion);
     void _handleOrbitExecutionStatus(const mavlink_message_t& message);
+
+    //GDP
+    void _handleFollowTarget(mavlink_message_t& message);
+    void _handleServoOutputRaw(mavlink_message_t& message);
+
     // ArduPilot dialect messages
 #if !defined(NO_ARDUPILOT_DIALECT)
     void _handleCameraFeedback(const mavlink_message_t& message);
