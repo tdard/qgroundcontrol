@@ -42,6 +42,9 @@
 #include "VideoManager.h"
 #include "VideoSettings.h"
 #include "PositionManager.h"
+// GDP
+#include "Stratege.h"
+
 #if defined(QGC_AIRMAP_ENABLED)
 #include "AirspaceVehicleManager.h"
 #endif
@@ -105,6 +108,8 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _firmwarePluginInstanceData(nullptr)
     , _autopilotPlugin(nullptr)
     , _mavlink(nullptr)
+    //GDP
+    , _stratege(nullptr)
     , _soloFirmware(false)
     , _toolbox(qgcApp()->toolbox())
     , _settingsManager(_toolbox->settingsManager())
@@ -227,6 +232,10 @@ Vehicle::Vehicle(LinkInterface*             link,
     connect(this, &Vehicle::armedChanged,               this, &Vehicle::_announceArmedChanged);
 
     connect(_toolbox->multiVehicleManager(), &MultiVehicleManager::parameterReadyVehicleAvailableChanged, this, &Vehicle::_vehicleParamLoaded);
+
+    // GDP
+    _stratege = _toolbox->stratege();
+    connect(this, &Vehicle::notifyStratege, _stratege, &Stratege::updateData);
 
     _uas = new UAS(_mavlink, this, _firmwarePluginManager);
 
@@ -738,7 +747,10 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
         _handleMavlinkLoggingDataAcked(message);
         break;
     case MAVLINK_MSG_ID_GPS_RAW_INT:
+    {
         _handleGpsRawInt(message);
+        emit notifyStratege(message);
+    }
         break;
     case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
     {

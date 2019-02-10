@@ -36,9 +36,11 @@ void Stratege::_dataReceiver()
     _test = 3;
 }
 
-void Stratege::_updateData(mavlink_message_t& message)
+void Stratege::updateData(mavlink_message_t& message)
 {
-    _test = 4;
+    //If a drone is connected & send a message to the handlers we modified, then we can ensure that the message is treated.
+    qDebug() << "Received signal from UAV: " << message.sysid << " .";
+    qDebug() << "Message ID: " << message.msgid << " .";
 }
 
 void Stratege::_processData()

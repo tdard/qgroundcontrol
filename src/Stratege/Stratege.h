@@ -32,10 +32,10 @@ signals:
 public slots:
     void abortMission();
     void startMission();
+    void updateData(mavlink_message_t& message);
 
 private slots:
     void _dataReceiver();
-    void _updateData(mavlink_message_t& message);
     void _processData();
 
 

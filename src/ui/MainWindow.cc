@@ -302,6 +302,7 @@ void MainWindow::_showDockWidget(const QString& name, bool show)
     QGCDockWidget* dockWidget = _mapName2DockWidget[name];
     Q_ASSERT(dockWidget);
     dockWidget->setVisible(show);
+    //dockWidget->setVisible(!show);
     Q_ASSERT(_mapName2Action.contains(name));
     _mapName2Action[name]->setChecked(show);
 }

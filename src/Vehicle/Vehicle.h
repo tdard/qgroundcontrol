@@ -21,6 +21,8 @@
 #include "UASMessageHandler.h"
 #include "SettingsFact.h"
 #include "QGCMapCircle.h"
+// GDP
+#include "Stratege.h"
 
 class UAS;
 class UASInterface;
@@ -467,7 +469,7 @@ private:
        ESTIMATOR_GPS_GLITCH=1024, /* True if the EKF has detected a GPS glitch | */
        ESTIMATOR_ACCEL_ERROR=2048, /* True if the EKF has detected bad accelerometer data | */
 
-        typedef struct __mavlink_estimator_status_t {
+        typedef struct __estimator_status_t {
          uint64_t time_usec; /*< Timestamp (micros since boot or Unix epoch)*/
          float vel_ratio; /*< Velocity innovation test ratio*/
          float pos_horiz_ratio; /*< Horizontal position innovation test ratio*/
@@ -1304,6 +1306,8 @@ private:
     QObject*            _firmwarePluginInstanceData;
     AutoPilotPlugin*    _autopilotPlugin;
     MAVLinkProtocol*    _mavlink;
+    //GDP
+    Stratege*           _stratege;
     bool                _soloFirmware;
     QGCToolbox*         _toolbox;
     SettingsManager*    _settingsManager;
