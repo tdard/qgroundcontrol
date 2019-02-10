@@ -741,7 +741,11 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
         _handleGpsRawInt(message);
         break;
     case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
+    {
         _handleGlobalPositionInt(message);
+        // GDP
+        emit notifyStratege(message);
+    }
         break;
     case MAVLINK_MSG_ID_ALTITUDE:
         _handleAltitude(message);
@@ -813,6 +817,12 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
         _handleWind(message);
         break;
 #endif
+    // GDP
+    case MAVLINK_MSG_ID_FOLLOW_TARGET:
+        emit notifyStratege(message);
+        break;
+    case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
+        emit notifyStratege(message);
     }
 
     // This must be emitted after the vehicle processes the message. This way the vehicle state is up to date when anyone else

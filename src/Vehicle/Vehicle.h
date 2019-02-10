@@ -1263,8 +1263,8 @@ private:
     void _handleOrbitExecutionStatus(const mavlink_message_t& message);
 
     //GDP
-    void _handleFollowTarget(mavlink_message_t& message);
-    void _handleServoOutputRaw(mavlink_message_t& message);
+    //void _handleFollowTarget(mavlink_message_t& message); //no need, only a signal is sent
+    //void _handleServoOutputRaw(mavlink_message_t& message);
 
     // ArduPilot dialect messages
 #if !defined(NO_ARDUPILOT_DIALECT)
