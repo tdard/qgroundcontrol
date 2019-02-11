@@ -1,6 +1,4 @@
-
 #include "Stratege.h"
-
 #include "AutoPilotPlugin.h"
 #include "MAVLinkProtocol.h"
 #include "UAS.h"
@@ -17,10 +15,6 @@
 
 Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolbox)
 {
-    _count = 1;
-    _arm = true;
-
-
     _abortMission = false;
     _startMission = false;
 }
@@ -32,6 +26,7 @@ void Stratege::abortMission()
     _abortMission = true; //eventually, instead of having a variable here implement the solution right here
     qDebug() << "Mission Aborted";
 }
+
 
 void Stratege::startMission()
 {
@@ -57,13 +52,6 @@ void Stratege::updateData(mavlink_message_t& message)
     }
 }
 
-void Stratege::_processData()
-{
-    //TODO
-    /*
-     * Assuming that the variables of interest are the member variables, write the algorithm of multi-target filtering & task control.
-     */
-}
 
 void Stratege::_addedVehicle(Vehicle* vehicle)
 {
