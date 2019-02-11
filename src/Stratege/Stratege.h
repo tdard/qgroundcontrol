@@ -35,7 +35,8 @@ public slots:
     void updateData(mavlink_message_t& message);
 
 private slots:
-    void _dataReceiver();
+    void _addedVehicle(Vehicle* vehicle); //Modify dynamically the size of the member variables
+    void _removedVehicle(Vehicle* vehicle);
     void _processData();
 
 
@@ -44,27 +45,30 @@ private:
     void _taskControl();
 
     //Member variables
-//List of MAVLink messages ?
-//classification of mavlink messages based on their ID !
-//slot: onVehicleAdded, onVehicleDestroyed (or in the list of the vehicles) that will modify a member variable
-//distinction attack/defense/UGV by vehicle ID
 
-    //QList or QMap ??
+    //classification of mavlink messages based on their IP -> A vehicle will have 2 LinkInterface* that have IP information. The associated member variable is _link : add public function link()
 
+    //distinction attack/defense/UGV by vehicle based on their IP
+    //->map: IP / role
 
     //Time
+    //->QTime ? for end of the round or at 8/9' strategy
+    //QTime* _missionTime;
 
     //Last measured enemy coordinates
+    //List of QGeoCoordinates ??
 
     //Estimated enemy coordinates
+    //Idem ?
 
     //Estimated UAV/UGV coordinates
+    //Idem ?
 
-    //Key-Value: ID -> type (GDP_Attack / GDP_Defense /GDP_UGV)
-
-    //test variable
-    uint32_t _test;
-
+    //test variables for command
+    uint32_t _count;
+    bool _arm;
+    bool _abortMission;
+    bool _startMission;
 };
 
 #endif

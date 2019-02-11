@@ -413,6 +413,21 @@ void MainWindow::configureWindowName()
     setWindowTitle(qApp->applicationName() + " " + qApp->applicationVersion());
 }
 
+// GDP
+void MainWindow::startMission()
+{
+    qDebug() << "Slot startMission triggered";
+    //emit the signal to notify the Stratege
+    emit startMissionSignal();
+}
+
+void MainWindow::abortMission()
+{
+    qDebug("Slot abortMission triggered");
+    //emit the signal to notify the Stratege
+    emit abortMissionSignal();
+}
+
 /**
 * @brief Create all actions associated to the main window
 *
@@ -422,6 +437,11 @@ void MainWindow::connectCommonActions()
     // Connect internal actions
     connect(qgcApp()->toolbox()->multiVehicleManager(), &MultiVehicleManager::vehicleAdded, this, &MainWindow::_vehicleAdded);
     connect(this, &MainWindow::reallyClose, this, &MainWindow::_reallyClose, Qt::QueuedConnection); // Queued to allow closeEvent to fully unwind before _reallyClose is called
+
+    // GDP
+    //Connect the signal startMissionSignal of this to the slot startMission of the Stratege
+    connect(this, &MainWindow::startMissionSignal, qgcApp()->toolbox()->stratege(), &Stratege::startMission);
+    connect(this, &MainWindow::abortMissionSignal, qgcApp()->toolbox()->stratege(), &Stratege::abortMission);
 }
 
 void MainWindow::_openUrl(const QString& url, const QString& errorMessage)

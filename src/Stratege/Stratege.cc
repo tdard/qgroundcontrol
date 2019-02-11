@@ -17,35 +17,68 @@
 
 Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolbox)
 {
-    _test = 0;
+    _count = 1;
+    _arm = true;
+
+
+    _abortMission = false;
+    _startMission = false;
 }
 
 
 void Stratege::abortMission()
 {
-    _test = 1;
+    _startMission = false;
+    _abortMission = true; //eventually, instead of having a variable here implement the solution right here
+    qDebug() << "Mission Aborted";
 }
 
 void Stratege::startMission()
 {
-    _test = 2;
+    _startMission = true;
+    qDebug() << "Mission Started";
 }
 
-void Stratege::_dataReceiver()
-{
-    _test = 3;
-}
 
 void Stratege::updateData(mavlink_message_t& message)
 {
-    //If a drone is connected & send a message to the handlers we modified, then we can ensure that the message is treated.
-    qDebug() << "Received signal from UAV: " << message.sysid << " .";
-    qDebug() << "Message ID: " << message.msgid << " .";
+    if (_startMission == true)
+    {
+        //TODO
+        /*
+         * Receives a mavlink_message_t and update the member variables
+         */
+
+
+        //If we have started the mission, then this should appears in the console
+        Vehicle* activeVehicle = _toolbox->multiVehicleManager()->activeVehicle();
+        qDebug() << "Confirmation of active vehicle: " << activeVehicle->id();
+
+    }
 }
 
 void Stratege::_processData()
 {
-    _test = 5;
+    //TODO
+    /*
+     * Assuming that the variables of interest are the member variables, write the algorithm of multi-target filtering & task control.
+     */
+}
+
+void Stratege::_addedVehicle(Vehicle* vehicle)
+{
+    //TODO
+    /*
+     * Increase the size of the member variables (List or something...)
+     */
+}
+
+void Stratege::_removedVehicle(Vehicle* vehicle)
+{
+    //TODO
+    /*
+     * Decrease the size of the member variables (List or something...)
+     */
 }
 
 

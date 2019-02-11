@@ -88,7 +88,9 @@ public slots:
 
     /** @brief Update the window name */
     void configureWindowName();
-
+    // GDP
+    void startMission();
+    void abortMission();
 protected slots:
     /**
      * @brief Enable/Disable Status Bar
@@ -103,6 +105,9 @@ signals:
 
     // Used for unit tests to know when the main window closes
     void mainWindowClosed(void);
+    // GDP
+    void startMissionSignal();
+    void abortMissionSignal();
 
 public:
     QGCMAVLinkLogPlayer* getLogPlayer()
