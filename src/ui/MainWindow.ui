@@ -25,7 +25,18 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QLCDNumber" name="lcdNumber">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>510</y>
+      <width>64</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -113,8 +124,8 @@
    <slot>startMission()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>210</x>
-     <y>72</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>273</x>
@@ -145,8 +156,8 @@
    <slot>abortMission()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>160</x>
-     <y>1</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>149</x>

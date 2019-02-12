@@ -13,10 +13,27 @@
 
 #include <QQmlEngine>
 
+VehicleAttribut::VehicleAttribut()
+{
+    _role = -1;
+    _lonLatAltCoord = QGeoCoordinate();
+    _hdg = UINT16_MAX;  //If we don't know, we set to this Value                        https://mavlink.io/en/messages/common.html#GLOBAL_POSITION_INT
+    _targetLonLatAltCoord = QGeoCoordinate();
+    _mainServo = QList<int16_t>();
+    _auxServo = QList<int16_t>();
+}
+
+
+
 Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolbox)
 {
     _abortMission = false;
     _startMission = false;
+    _time = QTime();
+    _time.start();
+
+
+    //_vehicleMap = QMap<Vehicle*, VehicleAttribut*>();
 }
 
 
@@ -25,12 +42,15 @@ void Stratege::abortMission()
     _startMission = false;
     _abortMission = true; //eventually, instead of having a variable here implement the solution right here
     qDebug() << "Mission Aborted";
+    qDebug() << "Time in minutes: " << _time.minute();
+
 }
 
 
 void Stratege::startMission()
 {
     _startMission = true;
+    _time.restart();
     qDebug() << "Mission Started";
 }
 
