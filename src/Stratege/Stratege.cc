@@ -33,7 +33,7 @@ Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolb
     _time.start();
 
 
-    //_vehicleMap = QMap<Vehicle*, VehicleAttribut*>();
+    _vehicleMap = new QMap<Vehicle*, VehicleAttribut*>();
 }
 
 
