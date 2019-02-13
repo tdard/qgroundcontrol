@@ -141,7 +141,7 @@ private:
 
     QTime _time;
 
-    QMap<Vehicle*, VehicleAttribut*>* _vehicleMap;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
+//    QMap<Vehicle*, VehicleAttribut*>* _vehicleMap;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
 
 };
 

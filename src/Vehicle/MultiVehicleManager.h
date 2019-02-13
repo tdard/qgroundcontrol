@@ -88,9 +88,6 @@ signals:
 
     void _deleteVehiclePhase2Signal(void);
 
-//GDP
-public slots:
-    void strategeCommandHandler(mavlink_message_t& message);
 
 private slots:
     void _deleteVehiclePhase1(Vehicle* vehicle);
