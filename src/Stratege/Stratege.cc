@@ -10,6 +10,7 @@
 #include "QGCCorePlugin.h"
 #include "QGCOptions.h"
 
+#include "Vehicle.h"
 
 #include <QQmlEngine>
 
@@ -73,21 +74,21 @@ void Stratege::updateData(mavlink_message_t& message)
 }
 
 
-void Stratege::_addedVehicle(Vehicle* vehicle)
-{
-    //TODO
-    /*
-     * Increase the size of the member variables (List or something...)
-     */
-}
+//void Stratege::_addedVehicle(Vehicle* vehicle)
+//{
+//    //TODO
+//    /*
+//     * Increase the size of the member variables (List or something...)
+//     */
+//}
 
-void Stratege::_removedVehicle(Vehicle* vehicle)
-{
-    //TODO
-    /*
-     * Decrease the size of the member variables (List or something...)
-     */
-}
+//void Stratege::_removedVehicle(Vehicle* vehicle)
+//{
+//    //TODO
+//    /*
+//     * Decrease the size of the member variables (List or something...)
+//     */
+//}
 
 void Stratege::_mtFiltering()
 {

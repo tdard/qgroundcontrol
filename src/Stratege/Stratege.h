@@ -126,9 +126,9 @@ public slots:
     void startMission();
     void updateData(mavlink_message_t& message);
 
-private slots:
-    void _addedVehicle(Vehicle* vehicle); //Modify dynamically the size of the member variables
-    void _removedVehicle(Vehicle* vehicle);
+//private slots:
+//    void _addedVehicle(Vehicle* vehicle); //Modify dynamically the size of the member variables
+//    void _removedVehicle(Vehicle* vehicle);
 
 private:
     void _mtFiltering();                                                                            //To modify: return list of QGeoGoordinates representing true enemy position. Return also speed indication-> not this type then ??

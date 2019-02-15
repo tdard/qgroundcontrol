@@ -49,8 +49,18 @@
      <string>Widgets</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuMission_Menu">
+    <property name="title">
+     <string>Mission Menu</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionStart_Mission"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbort_Mission"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWidgets"/>
+   <addaction name="menuMission_Menu"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
@@ -82,6 +92,16 @@
     <string>Replay Flight Data</string>
    </property>
   </action>
+  <action name="actionStart_Mission">
+   <property name="text">
+    <string>Start Mission</string>
+   </property>
+  </action>
+  <action name="actionAbort_Mission">
+   <property name="text">
+    <string>Abort Mission</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
@@ -102,5 +122,41 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionStart_Mission</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>startMission()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>15</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>165</x>
+     <y>150</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAbort_Mission</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>abortMission()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>156</x>
+     <y>13</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>84</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>startMission()</slot>
+  <slot>abortMission()</slot>
+ </slots>
 </ui>
