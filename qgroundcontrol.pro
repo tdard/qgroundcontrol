@@ -908,6 +908,9 @@ INCLUDEPATH += \
     src/FirmwarePlugin \
     src/Vehicle \
     src/VehicleSetup \
+    # GDP - Start
+    src/Stratege \
+    #GDP - Stop
 
 HEADERS+= \
     src/AutoPilotPlugins/AutoPilotPlugin.h \
@@ -926,6 +929,9 @@ HEADERS+= \
     src/Vehicle/GPSRTKFactGroup.h \
     src/Vehicle/Vehicle.h \
     src/VehicleSetup/VehicleComponent.h \
+    # GDP - Start
+    src/Stratege/Stratege.h \
+    #GDP - Stop
 
 !MobileBuild { !NoSerialBuild {
     HEADERS += \
@@ -952,6 +958,9 @@ SOURCES += \
     src/Vehicle/GPSRTKFactGroup.cc \
     src/Vehicle/Vehicle.cc \
     src/VehicleSetup/VehicleComponent.cc \
+    # GDP - Start
+    src/Stratege/Stratege.cc \
+    #GDP - Stop
 
 !MobileBuild { !NoSerialBuild {
     SOURCES += \
