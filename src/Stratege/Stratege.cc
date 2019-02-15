@@ -11,6 +11,7 @@
 #include "QGCOptions.h"
 
 #include "Vehicle.h"
+#include "QMap"
 
 #include <QQmlEngine>
 
@@ -34,7 +35,7 @@ Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolb
     _time.start();
 
 
-//    _vehicleMap = new QMap<Vehicle*, VehicleAttribut*>();
+    _vehicleMap = new QMap<Vehicle*, VehicleAttribut*>();
 }
 
 
@@ -74,21 +75,21 @@ void Stratege::updateData(mavlink_message_t& message)
 }
 
 
-//void Stratege::_addedVehicle(Vehicle* vehicle)
-//{
-//    //TODO
-//    /*
-//     * Increase the size of the member variables (List or something...)
-//     */
-//}
+void Stratege::_addedVehicle(Vehicle* vehicle)
+{
+    //TODO
+    /*
+     * Increase the size of the member variables (List or something...)
+     */
+}
 
-//void Stratege::_removedVehicle(Vehicle* vehicle)
-//{
-//    //TODO
-//    /*
-//     * Decrease the size of the member variables (List or something...)
-//     */
-//}
+void Stratege::_removedVehicle(Vehicle* vehicle)
+{
+    //TODO
+    /*
+     * Decrease the size of the member variables (List or something...)
+     */
+}
 
 void Stratege::_mtFiltering()
 {
