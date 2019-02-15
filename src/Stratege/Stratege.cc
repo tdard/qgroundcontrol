@@ -17,7 +17,7 @@
 
 VehicleAttribut::VehicleAttribut()
 {
-    _role = -1;
+    _role = UNDEFINED_UAV;
     _lonLatAltCoord = QGeoCoordinate();
     _hdg = UINT16_MAX;  //If we don't know, we set to this Value                        https://mavlink.io/en/messages/common.html#GLOBAL_POSITION_INT
     _targetLonLatAltCoord = QGeoCoordinate();
@@ -34,10 +34,15 @@ Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolb
     _time = QTime();
     _time.start();
 
-
     _vehicleMap = new QMap<Vehicle*, VehicleAttribut*>();
 }
 
+void Stratege::setToolbox(QGCToolbox *toolbox)
+{
+    QGCTool::setToolbox(toolbox);
+    connect(toolbox->multiVehicleManager(), &MultiVehicleManager::vehicleAdded, this, &Stratege::_addedVehicle);
+    connect(toolbox->multiVehicleManager(), &MultiVehicleManager::vehicleRemoved, this, &Stratege::_removedVehicle);
+}
 
 void Stratege::abortMission()
 {
@@ -81,6 +86,8 @@ void Stratege::_addedVehicle(Vehicle* vehicle)
     /*
      * Increase the size of the member variables (List or something...)
      */
+    qDebug()  << "Stratege: Vehicle Added";
+    _vehicleMap->insert(vehicle, new VehicleAttribut());
 }
 
 void Stratege::_removedVehicle(Vehicle* vehicle)
@@ -89,6 +96,8 @@ void Stratege::_removedVehicle(Vehicle* vehicle)
     /*
      * Decrease the size of the member variables (List or something...)
      */
+    qDebug()  << "Stratege: Vehicle Removed";
+    qDebug() << _vehicleMap->remove(vehicle);
 }
 
 void Stratege::_mtFiltering()

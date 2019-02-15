@@ -22,6 +22,7 @@ class MAVLinkProtocol;
 
 
 //Roles
+#define UNDEFINED_UAV   -1
 #define DEFENSE_UAV     0
 #define ATTACK_UAV      1
 #define DEFENSE_UGV     2
@@ -93,6 +94,7 @@ class Stratege : public QGCTool
 public:
     Stratege(QGCApplication* app, QGCToolbox* toolbox);
 
+    virtual void setToolbox(QGCToolbox* toolbox);
 
     //TODO: correctly initialize the coordinates describing the area of interest
 
