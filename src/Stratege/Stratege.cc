@@ -89,4 +89,13 @@ void Stratege::_removedVehicle(Vehicle* vehicle)
      */
 }
 
+void Stratege::_mtFiltering()
+{
+    //TODO
+}
+
+void Stratege::_taskControl()
+{
+    //TODO
+}
 

@@ -33,6 +33,9 @@ class MAVLinkLogManager;
 class QGCCorePlugin;
 class SettingsManager;
 class AirspaceManager;
+// GDP - Start
+class Stratege;
+//GDP - Stop
 #if defined(QGC_GST_TAISYNC_ENABLED)
 class TaisyncManager;
 #endif
@@ -61,6 +64,9 @@ public:
     QGCCorePlugin*              corePlugin              () { return _corePlugin; }
     SettingsManager*            settingsManager         () { return _settingsManager; }
     AirspaceManager*            airspaceManager         () { return _airspaceManager; }
+    // GDP - Start
+    Stratege*                   stratege                () { return _stratege; }
+    //GDP - Stop
 #ifndef __mobile__
     GPSManager*                 gpsManager              () { return _gpsManager; }
 #endif
@@ -94,6 +100,9 @@ private:
     QGCCorePlugin*              _corePlugin             = nullptr;
     SettingsManager*            _settingsManager        = nullptr;
     AirspaceManager*            _airspaceManager        = nullptr;
+    // GDP - Start
+    Stratege*                   _stratege               = nullptr;
+    //GDP - Stop
 #if defined(QGC_GST_TAISYNC_ENABLED)
     TaisyncManager*             _taisyncManager         = nullptr;
 #endif

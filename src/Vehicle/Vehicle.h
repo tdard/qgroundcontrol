@@ -21,6 +21,9 @@
 #include "UASMessageHandler.h"
 #include "SettingsFact.h"
 #include "QGCMapCircle.h"
+// GDP - Start
+#include "Stratege.h"
+// GDP - Stop
 
 class UAS;
 class UASInterface;
@@ -1180,6 +1183,9 @@ signals:
     // MAVLink protocol version
     void requestProtocolVersion(unsigned version);
     void mavlinkStatusChanged();
+    // GDP - Start
+    void notifyStratege(mavlink_message_t& message);
+    // GDP - Stop
 
 private slots:
     void _mavlinkMessageReceived(LinkInterface* link, mavlink_message_t message);
@@ -1295,6 +1301,9 @@ private:
     QObject*            _firmwarePluginInstanceData;
     AutoPilotPlugin*    _autopilotPlugin;
     MAVLinkProtocol*    _mavlink;
+    // GDP - Start
+    Stratege*           _stratege;
+    // GDP - Stop
     bool                _soloFirmware;
     QGCToolbox*         _toolbox;
     SettingsManager*    _settingsManager;

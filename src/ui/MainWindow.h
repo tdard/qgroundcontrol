@@ -88,6 +88,10 @@ public slots:
 
     /** @brief Update the window name */
     void configureWindowName();
+    // GDP - Start
+    void startMission();
+    void abortMission();
+    //GDP - Stop
 
 protected slots:
     /**
@@ -103,6 +107,10 @@ signals:
 
     // Used for unit tests to know when the main window closes
     void mainWindowClosed(void);
+    // GDP - Start
+    void startMissionSignal();
+    void abortMissionSignal();
+    //GDP - Stop
 
 public:
     QGCMAVLinkLogPlayer* getLogPlayer()

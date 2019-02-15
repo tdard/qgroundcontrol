@@ -14,6 +14,9 @@
 
 #include "Vehicle.h"
 #include "MAVLinkProtocol.h"
+// GDP - Start
+#include "Stratege.h"
+// GDP - Stop
 #include "FirmwarePluginManager.h"
 #include "LinkManager.h"
 #include "FirmwarePlugin.h"
@@ -105,6 +108,7 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _firmwarePluginInstanceData(nullptr)
     , _autopilotPlugin(nullptr)
     , _mavlink(nullptr)
+    , _stratege(nullptr)
     , _soloFirmware(false)
     , _toolbox(qgcApp()->toolbox())
     , _settingsManager(_toolbox->settingsManager())
@@ -227,6 +231,11 @@ Vehicle::Vehicle(LinkInterface*             link,
     connect(this, &Vehicle::armedChanged,               this, &Vehicle::_announceArmedChanged);
 
     connect(_toolbox->multiVehicleManager(), &MultiVehicleManager::parameterReadyVehicleAvailableChanged, this, &Vehicle::_vehicleParamLoaded);
+
+    // GDP - Start
+    _stratege = _toolbox->stratege();
+    connect(this, &Vehicle::notifyStratege, _stratege, &Stratege::updateData);
+    // GDP - Stop
 
     _uas = new UAS(_mavlink, this, _firmwarePluginManager);
 
@@ -741,11 +750,21 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
         _handleMavlinkLoggingDataAcked(message);
         break;
     case MAVLINK_MSG_ID_GPS_RAW_INT:
+    {
         _handleGpsRawInt(message);
+        // GDP - Start
+        emit notifyStratege(message);
+        // GDP - Stop
         break;
+    }
     case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
+    {
         _handleGlobalPositionInt(message);
+        // GDP - Start
+        emit notifyStratege(message);
+        // GDP - Stop
         break;
+    }
     case MAVLINK_MSG_ID_ALTITUDE:
         _handleAltitude(message);
         break;
@@ -816,6 +835,15 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
         _handleWind(message);
         break;
 #endif
+    // GDP - Start
+    case MAVLINK_MSG_ID_FOLLOW_TARGET:
+        emit notifyStratege(message);
+        break;
+
+    case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
+        emit notifyStratege(message);
+        break;
+    // GDP - Stop
     }
 
     // This must be emitted after the vehicle processes the message. This way the vehicle state is up to date when anyone else

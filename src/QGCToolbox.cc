@@ -30,6 +30,9 @@
 #include "QGCOptions.h"
 #include "SettingsManager.h"
 #include "QGCApplication.h"
+// GDP - Start
+#include "Stratege.h"
+//GDP - Stop
 #if defined(QGC_AIRMAP_ENABLED)
 #include "AirMapManager.h"
 #else
@@ -67,6 +70,9 @@ QGCToolbox::QGCToolbox(QGCApplication* app)
     _followMe               = new FollowMe                  (app, this);
     _videoManager           = new VideoManager              (app, this);
     _mavlinkLogManager      = new MAVLinkLogManager         (app, this);
+    // GDP - Start
+    _stratege               = new Stratege                  (app, this);
+    //GDP - Stop
     //-- Airmap Manager
     //-- This should be "pluggable" so an arbitrary AirSpace manager can be used
     //-- For now, we instantiate the one and only AirMap provider
@@ -104,6 +110,9 @@ void QGCToolbox::setChildToolboxes(void)
     _videoManager->setToolbox(this);
     _mavlinkLogManager->setToolbox(this);
     _airspaceManager->setToolbox(this);
+    // GDP - Start
+    _stratege->setToolbox(this);
+    //GDP - Stop
 #if defined(QGC_GST_TAISYNC_ENABLED)
     _taisyncManager->setToolbox(this);
 #endif
