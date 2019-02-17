@@ -126,6 +126,13 @@ const char* QGCApplication::_settingsVersionKey             = "SettingsVersion";
 const char* QGCApplication::_darkStyleFile          = ":/res/styles/style-dark.css";
 const char* QGCApplication::_lightStyleFile         = ":/res/styles/style-light.css";
 
+// GDP - Start
+#ifdef  MAVLINK_COMM_NUM_BUFFERS
+#undef  MAVLINK_COMM_NUM_BUFFERS
+#define MAVLINK_COMM_NUM_BUFFERS 32
+#endif
+// GDP - Stop
+
 // Mavlink status structures for entire app
 mavlink_status_t m_mavlink_status[MAVLINK_COMM_NUM_BUFFERS];
 

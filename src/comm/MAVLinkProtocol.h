@@ -24,6 +24,13 @@
 #include "QGCTemporaryFile.h"
 #include "QGCToolbox.h"
 
+// GDP - Start
+#ifdef  MAVLINK_COMM_NUM_BUFFERS
+#undef  MAVLINK_COMM_NUM_BUFFERS
+#define MAVLINK_COMM_NUM_BUFFERS 32
+#endif
+// GDP - Stop
+
 class LinkManager;
 class MultiVehicleManager;
 class QGCApplication;

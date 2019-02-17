@@ -33,7 +33,6 @@ Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolb
     _startMission = false;
     _time = QTime();
     _time.start();
-
     _vehicleMap = new QMap<Vehicle*, VehicleAttribut*>();
 }
 
@@ -49,8 +48,7 @@ void Stratege::abortMission()
     _startMission = false;
     _abortMission = true; //eventually, instead of having a variable here implement the solution right here
     qDebug() << "Mission Aborted";
-    qDebug() << "Time in minutes: " << _time.minute();
-
+    qDebug() << "Time in minutes: " << _time.minute();  //do not return the right time actually.
 }
 
 
@@ -64,6 +62,9 @@ void Stratege::startMission()
 
 void Stratege::updateData(mavlink_message_t& message)
 {
+
+
+
     if (_startMission == true)
     {
         //TODO

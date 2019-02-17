@@ -56,29 +56,24 @@ public:
 //      void setAuxServo(int16_t servo1_raw = 0, int16_t servo2_raw = 0, int16_t servo3_raw = 0, int16_t servo4_raw = 0, int16_t servo5_raw = 0, int16_t servo6_raw = 0, int16_t servo7_raw = 0, int16_t servo8_raw = 0);       // Implementation in Stratege.cc
 
 
-      int role() { return _role; }
-      QGeoCoordinate lonLatAltCoord() { return _lonLatAltCoord; }
-      uint16_t hdg() { return _hdg; }
-      QGeoCoordinate targetLonLatAltCoord() { return _targetLonLatAltCoord; }
-      QList<int16_t> mainServo() { return _mainServo; }
-      QList<int16_t> auxServo() { return _auxServo; }
+      int role                              () { return _role; }
+      QGeoCoordinate lonLatAltCoord         () { return _lonLatAltCoord; }
+      uint16_t hdg                          () { return _hdg; }
+      QGeoCoordinate targetLonLatAltCoord   () { return _targetLonLatAltCoord; }
+      //float targetVelocity[3]               () { return _targetVelocity; }
+      QList<int16_t> mainServo              () { return _mainServo; }
+      QList<int16_t> auxServo               () { return _auxServo; }
 
 
 private:
-
-      //Member Variables
-
-      //Vehicle role
       int _role;
-
-      //Lon/Lat/Alt coordinates
       QGeoCoordinate _lonLatAltCoord;
-
       //Heading
       uint16_t _hdg;
 
-      //Coordinates of the last enemy spotted by this vehicle
+      //Information on the last enemy spotted by this vehicle
       QGeoCoordinate _targetLonLatAltCoord;
+      //float _targetVelocity[3];
 
       //Servo Information, PPM Modulation
       QList<int16_t> _mainServo;
@@ -129,7 +124,7 @@ public slots:
     void startMission();
     void updateData(mavlink_message_t& message);
 
-private slots:
+//private slots:
     void _addedVehicle(Vehicle* vehicle); //Modify dynamically the size of the member variables
     void _removedVehicle(Vehicle* vehicle);
 

@@ -20,6 +20,14 @@
 #define MAVLINK_EXTERNAL_RX_STATUS  // Single m_mavlink_status instance is in QGCApplication.cc
 #include <stddef.h>                 // Hack workaround for Mav 2.0 header problem with respect to offsetof usage
 #include <mavlink_types.h>
+
+// GDP - Start
+#ifdef  MAVLINK_COMM_NUM_BUFFERS
+#undef  MAVLINK_COMM_NUM_BUFFERS
+#define MAVLINK_COMM_NUM_BUFFERS 32
+#endif
+// GDP - Stop
+
 extern mavlink_status_t m_mavlink_status[MAVLINK_COMM_NUM_BUFFERS];
 #include <mavlink.h>
 
