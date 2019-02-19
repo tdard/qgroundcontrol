@@ -124,7 +124,7 @@ public slots:
     void startMission();
     void updateData(mavlink_message_t& message);
 
-//private slots:
+private slots:
     void _addedVehicle(Vehicle* vehicle); //Modify dynamically the size of the member variables
     void _removedVehicle(Vehicle* vehicle);
 

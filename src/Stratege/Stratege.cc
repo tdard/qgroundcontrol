@@ -15,6 +15,9 @@
 
 #include <QQmlEngine>
 
+#include "PlanManager.h"
+#include "MissionItem.h"
+
 VehicleAttribut::VehicleAttribut()
 {
     _role = UNDEFINED_UAV;
@@ -47,16 +50,27 @@ void Stratege::abortMission()
 {
     _startMission = false;
     _abortMission = true; //eventually, instead of having a variable here implement the solution right here
-    qDebug() << "Mission Aborted";
-    qDebug() << "Time in minutes: " << _time.minute();  //do not return the right time actually.
+    qDebug() << "Abortion of mission started";
+    for(auto vm : _vehicleMap->keys())
+    {
+        vm->firmwarePlugin()->guidedModeLand(vm);
+    }
+    qDebug() << "Abortion of mission finished";
+    qDebug() << "Current time: " << QTime::currentTime().toString();
+    qDebug() << "Timespan (s) : " << _time.secsTo(QTime::currentTime());
 }
 
 
 void Stratege::startMission()
 {
-    _startMission = true;
     _time.restart();
-    qDebug() << "Mission Started";
+    qDebug() << "Mission Started: time: " << _time.toString();
+
+    for(auto vm : _vehicleMap->keys())
+    {
+        vm->firmwarePlugin()->guidedModeTakeoff(vm, 15);
+    }
+    _startMission = true;
 }
 
 
@@ -72,10 +86,6 @@ void Stratege::updateData(mavlink_message_t& message)
          * Receives a mavlink_message_t and update the member variables
          */
 
-
-        //If we have started the mission, then this should appears in the console
-        Vehicle* activeVehicle = _toolbox->multiVehicleManager()->activeVehicle();
-        qDebug() << "Confirmation of active vehicle: " << activeVehicle->id();
 
     }
 }
