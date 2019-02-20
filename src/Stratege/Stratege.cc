@@ -11,7 +11,6 @@
 #include "QGCOptions.h"
 
 #include "Vehicle.h"
-//#include "QMap"
 
 #include <QQmlEngine>
 
@@ -74,12 +73,10 @@ void Stratege::startMission()
 }
 
 
-void Stratege::updateData(mavlink_message_t& message)
+void Stratege::updateData(mavlink_message_t message)
 {
-    //TODO
-//    Parse the different incoming mavlink messages: servo_output_raw & follow_target
-
-
+    _parse(message);
+    _mtFiltering();
 
     if (_startMission == true)
     {
@@ -133,3 +130,37 @@ void Stratege::_taskControl()
     //TODO
 }
 
+void Stratege::_parse(mavlink_message_t message)    //To modify, does not work as expected. Or, check in Vehicle.cc
+{
+    //TODO
+    //Parse the different incoming mavlink messages: servo_output_raw & follow_target
+    switch (message.msgid)
+    {
+        case MAVLINK_MSG_ID_FOLLOW_TARGET:
+            mavlink_follow_target_t follow_target;
+            mavlink_msg_follow_target_decode(&message, &follow_target);
+            for(auto vm: _mapVehicle2VehicleAttribut->keys())
+            {
+                if(vm->id() == message.msgid)
+                {
+                    qDebug() << "FOLLOW_TARGET message received";
+                    //TODO: Update Position & Velocity of the target using _mapVehicle2VehicleAttribut->value(vm)
+                }
+            }
+            break;
+        case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
+            mavlink_servo_output_raw_t servo_output_raw;
+            mavlink_msg_servo_output_raw_decode(&message, &servo_output_raw);
+            for(auto vm: _mapVehicle2VehicleAttribut->keys())
+            {
+                if(vm->id() == message.msgid)
+                {
+                    qDebug() << "SERVO_OUTPUT_RAW message received";
+                    //TODO: Update Servo Outputs of AUX or MAIN using _mapVehicle2VehicleAttribut->value(vm)
+                }
+            }
+                break;
+        default:
+            qDebug() << "Stratege: Not desired Message ID: " << message.msgid;
+    }
+}

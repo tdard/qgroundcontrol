@@ -116,7 +116,7 @@ public:
 public slots:
     void abortMission();
     void startMission();
-    void updateData(mavlink_message_t& message);
+    void updateData(mavlink_message_t message);
 
 private slots:
     void _addedVehicle(Vehicle* vehicle); //Modify dynamically the size of the member variables
@@ -125,7 +125,7 @@ private slots:
 private:
     void _mtFiltering();                                                                            //To modify: return list of QGeoGoordinates representing true enemy position. Return also speed indication-> not this type then ??
     void _taskControl();     //dictionnary associating position & speed for designated targets
-
+    void _parse(mavlink_message_t message);
     //Member variables
 
     bool _abortMission;

@@ -1184,7 +1184,7 @@ signals:
     void requestProtocolVersion(unsigned version);
     void mavlinkStatusChanged();
     // GDP - Start
-    void notifyStratege(mavlink_message_t& message);
+    void notifyStratege(mavlink_message_t message);
     // GDP - Stop
 
 private slots:
