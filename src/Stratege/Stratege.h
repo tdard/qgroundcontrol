@@ -1,18 +1,20 @@
 #ifndef Stratege_H
 #define Stratege_H
 
-#include "Vehicle.h"
+//#include "Vehicle.h"
 #include "QGCMAVLink.h"
 #include "QmlObjectListModel.h"
 #include "QGCToolbox.h"
 #include "QGCLoggingCategory.h"
 
 #include "QMap"
+#include "QGeoCoordinate"
+#include "QTime"
 
 class FirmwarePluginManager;
 class QGCApplication;
 class MAVLinkProtocol;
-
+class Vehicle;
 
 //Zones
 #define DEFENSE_ZONE     0

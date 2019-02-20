@@ -11,7 +11,7 @@
 #include "QGCOptions.h"
 
 #include "Vehicle.h"
-#include "QMap"
+//#include "QMap"
 
 #include <QQmlEngine>
 
