@@ -10,11 +10,16 @@
 #include "QMap"
 #include "QGeoCoordinate"
 #include "QTime"
+#include "QVector3D"
 
 class FirmwarePluginManager;
 class QGCApplication;
 class MAVLinkProtocol;
 class Vehicle;
+
+
+//Competition time
+#define COMPETITION_TIME 60
 
 //Zones
 #define DEFENSE_ZONE     0
@@ -35,44 +40,31 @@ class Vehicle;
 #define MOTOR_MAX_PWM   1800        //To change to real value
 
 //Time values for Strategy
-#define START_TIME_M        0
-#define STOP_TIME_M         10
 #define GO_ATTACK_TIME_M    8       //To change to real value
 
 
 class VehicleAttribut
 {
 public:
-      VehicleAttribut();                                                                                        // Implementation in Stratege.cc
-
-//      bool isInZone(int zone);                                                                                  // Implementation in Stratege.cc
-//      bool isHookOpened();                                                                                      // Implementation in Stratege.cc
-//      bool isThrottleTooLarge();                                                                                // Implementation in Stratege.cc
-
+      VehicleAttribut(Vehicle*);
 
       void setRole(int role) { _role = role; }
-//      void setlonLatAltCoord(float north, float east, float down);                                              // Implementation in Stratege.cc        //Need to convert from NED to Lon Lat Alt
-      void setHdg(uint16_t hdg) { _hdg = hdg; }
-//      void setTargetLonLatAltCoord(int32_t lat, int32_t lon, float alt);                                        // Implementation in Stratege.cc
+//      void setTargetLonLatAltCoord(int32_t lat, int32_t lon, float alt);
 //      void setMainServo(int16_t servo1_raw = 0, int16_t servo2_raw = 0, int16_t servo3_raw = 0, int16_t servo4_raw = 0, int16_t servo5_raw = 0, int16_t servo6_raw = 0, int16_t servo7_raw = 0, int16_t servo8_raw = 0);      // Implementation in Stratege.cc
 //      void setAuxServo(int16_t servo1_raw = 0, int16_t servo2_raw = 0, int16_t servo3_raw = 0, int16_t servo4_raw = 0, int16_t servo5_raw = 0, int16_t servo6_raw = 0, int16_t servo7_raw = 0, int16_t servo8_raw = 0);       // Implementation in Stratege.cc
 
-
+      Vehicle* vehicle                      () { return _vehicle; }
       int role                              () { return _role; }
-      QGeoCoordinate lonLatAltCoord         () { return _lonLatAltCoord; }
-      uint16_t hdg                          () { return _hdg; }
       QGeoCoordinate targetLonLatAltCoord   () { return _targetLonLatAltCoord; }
       //float targetVelocity[3]               () { return _targetVelocity; }
       QList<int16_t> mainServo              () { return _mainServo; }
       QList<int16_t> auxServo               () { return _auxServo; }
 
 
-private:
-      int _role;
-      QGeoCoordinate _lonLatAltCoord;
-      //Heading
-      uint16_t _hdg;
 
+private:
+      Vehicle* _vehicle;
+      int _role;
       //Information on the last enemy spotted by this vehicle
       QGeoCoordinate _targetLonLatAltCoord;
       //float _targetVelocity[3];
@@ -132,7 +124,7 @@ private slots:
 
 private:
     void _mtFiltering();                                                                            //To modify: return list of QGeoGoordinates representing true enemy position. Return also speed indication-> not this type then ??
-    void _taskControl();
+    void _taskControl();     //dictionnary associating position & speed for designated targets
 
     //Member variables
 
@@ -141,8 +133,8 @@ private:
 
     QTime _time;
 
-    QMap<Vehicle*, VehicleAttribut*>* _vehicleMap;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
-
+    QMap<Vehicle*, VehicleAttribut*>* _mapVehicle2VehicleAttribut;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
+    QMap<QGeoCoordinate, QVector3D>* _mapTargetsPositions2TargetsVelocities;
 };
 
 

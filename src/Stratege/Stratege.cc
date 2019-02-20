@@ -18,11 +18,10 @@
 #include "PlanManager.h"
 #include "MissionItem.h"
 
-VehicleAttribut::VehicleAttribut()
+VehicleAttribut::VehicleAttribut(Vehicle* vehicle)
 {
+    _vehicle = vehicle;
     _role = UNDEFINED_UAV;
-    _lonLatAltCoord = QGeoCoordinate();
-    _hdg = UINT16_MAX;  //If we don't know, we set to this Value                        https://mavlink.io/en/messages/common.html#GLOBAL_POSITION_INT
     _targetLonLatAltCoord = QGeoCoordinate();
     _mainServo = QList<int16_t>();
     _auxServo = QList<int16_t>();
@@ -36,7 +35,8 @@ Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolb
     _startMission = false;
     _time = QTime();
     _time.start();
-    _vehicleMap = new QMap<Vehicle*, VehicleAttribut*>();
+    _mapVehicle2VehicleAttribut = new QMap<Vehicle*, VehicleAttribut*>();
+    _mapTargetsPositions2TargetsVelocities = new QMap<QGeoCoordinate, QVector3D>();
 }
 
 void Stratege::setToolbox(QGCToolbox *toolbox)
@@ -51,7 +51,7 @@ void Stratege::abortMission()
     _startMission = false;
     _abortMission = true; //eventually, instead of having a variable here implement the solution right here
     qDebug() << "Abortion of mission started";
-    for(auto vm : _vehicleMap->keys())
+    for(auto vm : _mapVehicle2VehicleAttribut->keys())
     {
         vm->firmwarePlugin()->guidedModeLand(vm);
     }
@@ -66,7 +66,7 @@ void Stratege::startMission()
     _time.restart();
     qDebug() << "Mission Started: time: " << _time.toString();
 
-    for(auto vm : _vehicleMap->keys())
+    for(auto vm : _mapVehicle2VehicleAttribut->keys())
     {
         vm->firmwarePlugin()->guidedModeTakeoff(vm, 15);
     }
@@ -76,16 +76,31 @@ void Stratege::startMission()
 
 void Stratege::updateData(mavlink_message_t& message)
 {
+    //TODO
+//    Parse the different incoming mavlink messages: servo_output_raw & follow_target
 
 
 
     if (_startMission == true)
     {
-        //TODO
-        /*
-         * Receives a mavlink_message_t and update the member variables
-         */
+        //Stop State ~ Start
+        if (_time.secsTo(QTime::currentTime()) / COMPETITION_TIME)
+        {
+            _startMission = false;
+            for(auto vm : _mapVehicle2VehicleAttribut->keys())
+            {
+                if (vm->vehicleType() != MAV_TYPE_GROUND_ROVER){ vm->firmwarePlugin()->guidedModeLand(vm); }
+            }
+        }
+        //Stop State ~ Stop
 
+        //Test: get main information ~ Start
+        qDebug() << "Relative Altitude to home position: " << _mapVehicle2VehicleAttribut->keys().first()->coordinate().altitude() - _mapVehicle2VehicleAttribut->keys().first()->homePosition().altitude();   //relative altitude, negligate terrain altitude variation. Is home set at right position everytime ?
+        qDebug() << "Latitude: " << _mapVehicle2VehicleAttribut->keys().first()->coordinate().latitude();
+        qDebug() << "Longitude: " << _mapVehicle2VehicleAttribut->keys().first()->coordinate().longitude();
+        qDebug() << "Heading: " << _mapVehicle2VehicleAttribut->keys().first()->heading()->rawValue().toDouble();       // Clockwise: 0->360. CounterClockWise: 360->0
+        qDebug() << "UAV Type: " << _mapVehicle2VehicleAttribut->first()->role();
+        //Test ~ Stop
 
     }
 }
@@ -94,26 +109,23 @@ void Stratege::updateData(mavlink_message_t& message)
 void Stratege::_addedVehicle(Vehicle* vehicle)
 {
     //TODO
-    /*
-     * Increase the size of the member variables (List or something...)
-     */
-    qDebug()  << "Stratege: Vehicle Added";
-    _vehicleMap->insert(vehicle, new VehicleAttribut());
+//    Modify List of unoccupied zones
+    qDebug()  << "Stratege: Vehicle Added: No " << vehicle->id();
+    _mapVehicle2VehicleAttribut->insert(vehicle, new VehicleAttribut(vehicle));
 }
 
 void Stratege::_removedVehicle(Vehicle* vehicle)
 {
     //TODO
-    /*
-     * Decrease the size of the member variables (List or something...)
-     */
-    qDebug()  << "Stratege: Vehicle Removed";
-    qDebug() << _vehicleMap->remove(vehicle);
+//    Modify List of unoccupied zones
+    qDebug()  << "Stratege: Vehicle Removed: No " << vehicle->id();
+    qDebug() << _mapVehicle2VehicleAttribut->remove(vehicle);
 }
 
 void Stratege::_mtFiltering()
 {
     //TODO
+    // Update Targets information: _mapTargetsPositions2TargetsVelocities
 }
 
 void Stratege::_taskControl()
