@@ -22,8 +22,8 @@ VehicleAttribut::VehicleAttribut(Vehicle* vehicle)
     _vehicle = vehicle;
     _role = UNDEFINED_UAV;
     _targetLonLatAltCoord = QGeoCoordinate();
-    _mainServo = QList<int16_t>();
-    _auxServo = QList<int16_t>();
+    _mainServo = new mavlink_servo_output_raw_t;
+    _auxServo = new mavlink_servo_output_raw_t;
 }
 
 
@@ -81,7 +81,7 @@ void Stratege::updateData(mavlink_message_t message)
     if (_startMission == true)
     {
         //Stop State ~ Start
-        if (_time.secsTo(QTime::currentTime()) / COMPETITION_TIME)
+        if (_time.secsTo(QTime::currentTime()) == COMPETITION_TIME)
         {
             _startMission = false;
             for(auto vm : _mapVehicle2VehicleAttribut->keys())
@@ -98,7 +98,6 @@ void Stratege::updateData(mavlink_message_t message)
         qDebug() << "Heading: " << _mapVehicle2VehicleAttribut->keys().first()->heading()->rawValue().toDouble();       // Clockwise: 0->360. CounterClockWise: 360->0
         qDebug() << "UAV Type: " << _mapVehicle2VehicleAttribut->first()->role();
         //Test ~ Stop
-
     }
 }
 
@@ -141,7 +140,7 @@ void Stratege::_parse(mavlink_message_t message)    //To modify, does not work a
             mavlink_msg_follow_target_decode(&message, &follow_target);
             for(auto vm: _mapVehicle2VehicleAttribut->keys())
             {
-                if(vm->id() == message.msgid)
+                if(vm->id() == message.sysid)
                 {
                     qDebug() << "FOLLOW_TARGET message received";
                     //TODO: Update Position & Velocity of the target using _mapVehicle2VehicleAttribut->value(vm)
@@ -153,14 +152,17 @@ void Stratege::_parse(mavlink_message_t message)    //To modify, does not work a
             mavlink_msg_servo_output_raw_decode(&message, &servo_output_raw);
             for(auto vm: _mapVehicle2VehicleAttribut->keys())
             {
-                if(vm->id() == message.msgid)
+                if(vm->id() == message.sysid)
                 {
                     qDebug() << "SERVO_OUTPUT_RAW message received";
                     //TODO: Update Servo Outputs of AUX or MAIN using _mapVehicle2VehicleAttribut->value(vm)
+//                    if (servo_output_raw.port == 0){ _mapVehicle2VehicleAttribut->value(vm)->setMainServo(servo_output_raw) = servo_output_raw; }
+//                    else {_mapVehicle2VehicleAttribut->value(vm)->setAuxServo(servo_output_raw) = ;}
+
                 }
             }
                 break;
         default:
-            qDebug() << "Stratege: Not desired Message ID: " << message.msgid;
+            qDebug() << "Stratege: Not desired Message ID: " << message.sysid;
     }
 }

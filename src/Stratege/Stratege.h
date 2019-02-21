@@ -57,8 +57,8 @@ public:
       int role                              () { return _role; }
       QGeoCoordinate targetLonLatAltCoord   () { return _targetLonLatAltCoord; }
       //float targetVelocity[3]               () { return _targetVelocity; }
-      QList<int16_t> mainServo              () { return _mainServo; }
-      QList<int16_t> auxServo               () { return _auxServo; }
+      mavlink_servo_output_raw_t* mainServo              () { return _mainServo; }
+      mavlink_servo_output_raw_t* auxServo               () { return _auxServo; }
 
 
 
@@ -70,8 +70,8 @@ private:
       //float _targetVelocity[3];
 
       //Servo Information, PPM Modulation
-      QList<int16_t> _mainServo;
-      QList<int16_t> _auxServo;
+      mavlink_servo_output_raw_t* _mainServo;
+      mavlink_servo_output_raw_t* _auxServo;
 };
 
 
