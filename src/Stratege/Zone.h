@@ -10,6 +10,7 @@
 #include "QGeoCoordinate"
 #include "QTime"
 #include "QVector3D"
+#include "QVector2D"
 
 
 
@@ -52,6 +53,7 @@ public:
 
 private:
     QGeoCoordinate _getLocationMetres   (QGeoCoordinate origin, float dNorth, float dEast, float alt);
+    QVector2D _getRelativePosition(QGeoCoordinate origin, QGeoCoordinate point);
     float _dNorth;
     float _dEast;
     float _alt;
@@ -75,14 +77,14 @@ class ZoneManager: public QObject
 public:
     ZoneManager(QObject* parent = nullptr);
 
-    bool ready                      () { return _ready; }
-    QList<QGeoCoordinate> zones     ();
+    bool ready          () { return _ready; }
+    QList<Zone> zones   ();
 
 private slots:
     void createZones(QGeoCoordinate origin, QGeoCoordinate orientationPoint);
 
 private:
-    QList<QGeoCoordinate> _zones;
+    QList<Zone> _zones;
     bool _ready;
 };
 
