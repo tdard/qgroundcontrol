@@ -406,14 +406,14 @@ HEADERS += \
     src/api/QGCSettings.h \
     src/api/QmlComponentInfo.h \
     src/comm/MavlinkMessagesTimer.h \
-    src/GPS/Drivers/src/base_station.h
+    src/GPS/Drivers/src/base_station.h \
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
     src/api/QGCOptions.cc \
     src/api/QGCSettings.cc \
     src/api/QmlComponentInfo.cc \
-    src/comm/MavlinkMessagesTimer.cc
+    src/comm/MavlinkMessagesTimer.cc \
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)
@@ -931,6 +931,7 @@ HEADERS+= \
     src/VehicleSetup/VehicleComponent.h \
     # GDP - Start
     src/Stratege/Stratege.h \
+    src/Stratege/Zone.h
     #GDP - Stop
 
 !MobileBuild { !NoSerialBuild {
@@ -960,6 +961,7 @@ SOURCES += \
     src/VehicleSetup/VehicleComponent.cc \
     # GDP - Start
     src/Stratege/Stratege.cc \
+    src/Stratege/Zone.cc \
     #GDP - Stop
 
 !MobileBuild { !NoSerialBuild {

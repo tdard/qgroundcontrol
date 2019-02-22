@@ -1,7 +1,7 @@
 #ifndef Stratege_H
 #define Stratege_H
 
-//#include "Vehicle.h"
+
 #include "QGCMAVLink.h"
 #include "QmlObjectListModel.h"
 #include "QGCToolbox.h"
