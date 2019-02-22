@@ -31,31 +31,6 @@ QGeoCoordinate Zone::_getLocationMetres(QGeoCoordinate origin, float dNorth, flo
 }
 
 
-QGeoCoordinate Zone::topLeft()
-{
-    //TODO
-}
-
-QGeoCoordinate Zone::topRight()
-{
-    //TODO
-}
-
-QGeoCoordinate Zone::bottomLeft()
-{
-    //TODO
-}
-
-QGeoCoordinate Zone::bottomRight()
-{
-    //TODO
-}
-
-QGeoCoordinate Zone::centre()
-{
-    //TODO
-}
-
 bool Zone::inside(QGeoCoordinate location)
 {
     //TODO

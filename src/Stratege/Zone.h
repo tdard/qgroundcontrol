@@ -43,11 +43,11 @@ public:
     float width                         () { return _width; }
     float length                        () { return _length; }
     float height                        () { return _height; }
-    QGeoCoordinate topLeft              ();
-    QGeoCoordinate topRight             ();
-    QGeoCoordinate bottomLeft           ();
-    QGeoCoordinate bottomRight          ();
-    QGeoCoordinate centre               ();
+    QGeoCoordinate topLeft              () { return _topLeft; }
+    QGeoCoordinate topRight             () { return _topRight; }
+    QGeoCoordinate bottomLeft           () { return _bottomLeft; }
+    QGeoCoordinate bottomRight          () { return _bottomRight; }
+    QGeoCoordinate centre               () { return _centre; }
     bool inside                         (QGeoCoordinate location);
 
 private:
