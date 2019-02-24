@@ -213,6 +213,50 @@ QGCFlickable {
                         }
                     } // GridLayout
 
+                    // GDP - Start
+                    SectionHeader {
+                        id:     rectangleSection
+                        text:   qsTr("GeoFence Competition")
+                    }
+
+                    GridLayout {
+                        anchors.left:   parent.left
+                        anchors.right:  parent.right
+                        rows:           4
+                        flow:           GridLayout.TopToBottom
+
+                        TextField {
+                            id:                 textFieldLongitude
+                            placeholderText:    qsTr("Origin Lon")
+                            Layout.row:         0
+                        }
+
+                        TextField {
+                            id:                 textFieldLatitude
+                            placeholderText:    qsTr("Origin Lat")
+                            Layout.row:         1
+                        }
+
+                        TextField {
+                            id:                 textFieldRotation
+                            placeholderText:    qsTr("Rotation (°)")
+                            Layout.row  :       2
+                        }
+
+                        QGCButton {
+                            anchors.left:   parent.left
+                            anchors.right:  parent.right
+                            text:           qsTr("Build Fence")
+
+                            onClicked: {
+
+                            }
+
+                        }
+                    }
+
+                    // GDP - Stop
+
                     SectionHeader {
                         id:     circleSection
                         text:   qsTr("Circular Fences")

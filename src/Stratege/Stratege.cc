@@ -142,7 +142,7 @@ void Stratege::_parse(mavlink_message_t message)    //To modify, does not work a
             {
                 if(vm->id() == message.sysid)
                 {
-                    qDebug() << "FOLLOW_TARGET message received";
+//                    qDebug() << "FOLLOW_TARGET message received";
                     //TODO: Update Position & Velocity of the target using _mapVehicle2VehicleAttribut->value(vm)
                 }
             }
@@ -154,7 +154,7 @@ void Stratege::_parse(mavlink_message_t message)    //To modify, does not work a
             {
                 if(vm->id() == message.sysid)
                 {
-                    qDebug() << "SERVO_OUTPUT_RAW message received";
+//                    qDebug() << "SERVO_OUTPUT_RAW message received";
                     //TODO: Update Servo Outputs of AUX or MAIN using _mapVehicle2VehicleAttribut->value(vm)
 //                    if (servo_output_raw.port == 0){ _mapVehicle2VehicleAttribut->value(vm)->setMainServo(servo_output_raw) = servo_output_raw; }
 //                    else {_mapVehicle2VehicleAttribut->value(vm)->setAuxServo(servo_output_raw) = ;}
@@ -162,7 +162,7 @@ void Stratege::_parse(mavlink_message_t message)    //To modify, does not work a
                 }
             }
                 break;
-        default:
-            qDebug() << "Stratege: Not desired Message ID: " << message.sysid;
+//        default:
+//            qDebug() << "Stratege: Not desired Message ID: " << message.sysid;
     }
 }
