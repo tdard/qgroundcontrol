@@ -504,6 +504,11 @@ QGCView {
                             _rallyPointController.addPoint(coordinate)
                         }
                         break
+                    // GDP - Start
+                    case _layerGeoFence:
+                        myGeoFenceEditor.setMouseCoord(coordinate)
+                        break
+                    //GDP - Stop
                     }
                 }
             }
@@ -855,6 +860,9 @@ QGCView {
             }
             // GeoFence Editor
             GeoFenceEditor {
+                // GDP - Start
+                id:                     myGeoFenceEditor
+                // GDP - Stop
                 anchors.top:            rightControls.bottom
                 anchors.topMargin:      ScreenTools.defaultFontPixelHeight * 0.5
                 anchors.bottom:         parent.bottom
