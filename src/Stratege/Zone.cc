@@ -60,15 +60,30 @@ Zone::Zone(QGeoCoordinate origin, QGeoCoordinate orientationPoint, float dNorth,
 
 QGeoCoordinate Zone::_getLocationMetres(QGeoCoordinate origin, float dNorth, float dEast, float alt)
 {
+    QGeoCoordinate locationMetres = QGeoCoordinate();
+    //Coordinate offsets in radians
     double dLat = dNorth / EARTH_RADIUS;
-    //double dLon = dEast / (EARTH_RADIUS * cos())
-
-    //TODO
+    double dLon = dEast / (EARTH_RADIUS * cos(M_PI * origin.latitude()/180 ));
+    //New position in decimal degrees
+    double newlat = origin.latitude() + (dLat * 180/M_PI);
+    double newlon = origin.longitude() + (dLon * 180/M_PI);
+    locationMetres.setLatitude(newlat);
+    locationMetres.setLongitude(newlon);
+    locationMetres.setLongitude(alt);
+    return locationMetres;
 }
 
-QVector2D Zone::_getRelativePosition(QGeoCoordinate origin, QGeoCoordinate point)
+
+QVector2D Zone::_getRelativePosition(QGeoCoordinate origin, QGeoCoordinate locationMetres)
 {
-    //TODO
+    QVector2D relativeposition = QVector2D();
+    float dLat = (locationMetres.latitude()-origin.latitude())*M_PI/180;
+    float dLon = (locationMetres.longitude()-origin.longitude())*M_PI/180;
+    float dNorth = dLat * EARTH_RADIUS;
+    float dEast = dLon * (EARTH_RADIUS * cos(M_PI * origin.latitude()/180 ));
+    relativeposition.setX(dNorth);
+    relativeposition.setY(dEast);
+    return relativeposition;
 }
 
 
