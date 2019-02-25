@@ -58,6 +58,10 @@ public:
     /// Clears the interactive bit from all fence items
     Q_INVOKABLE void clearAllInteractive(void);
 
+    // GDP - Start
+    Q_INVOKABLE void buildCompetitionPolygonFence(QString origin_lat = NULL, QString origin_lon = NULL, QString rotation = NULL);
+    // GDP - Stop
+
     double paramCircularFence(void);
 
     // Overrides from PlanElementController

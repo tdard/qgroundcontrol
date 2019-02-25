@@ -404,6 +404,10 @@ void GeoFenceController::addInclusionPolygon(QGeoCoordinate topLeft, QGeoCoordin
 
     clearAllInteractive();
     polygon->setInteractive(true);
+
+    // GDP - Start
+    qDebug() << "I want to send a signal sending the polygon to the Stratege so it can update the position";
+    // GDP - Stop
 }
 
 void GeoFenceController::addInclusionCircle(QGeoCoordinate topLeft, QGeoCoordinate bottomRight)
@@ -456,6 +460,15 @@ void GeoFenceController::clearAllInteractive(void)
         _circles.value<QGCFenceCircle*>(i)->setInteractive(false);
     }
 }
+
+//GDP - Start
+void GeoFenceController::buildCompetitionPolygonFence(QString origin_lat, QString origin_lon, QString rotation)
+{
+    qDebug() << "rotation: " << rotation << ", origin: " << origin_lat << " " << origin_lon;
+    QGeoCoordinate origin = QGeoCoordinate(origin_lat.toDouble(), origin_lon.toDouble());
+    qDebug() << origin.latitude();
+}
+// GDP - Stop
 
 bool GeoFenceController::supported(void) const
 {

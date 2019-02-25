@@ -1,6 +1,7 @@
 import QtQuick          2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts  1.2
+import QtPositioning    5.2
 
 import QGroundControl               1.0
 import QGroundControl.ScreenTools   1.0
@@ -213,49 +214,7 @@ QGCFlickable {
                         }
                     } // GridLayout
 
-                    // GDP - Start
-                    SectionHeader {
-                        id:     rectangleSection
-                        text:   qsTr("GeoFence Competition")
-                    }
 
-                    GridLayout {
-                        anchors.left:   parent.left
-                        anchors.right:  parent.right
-                        rows:           4
-                        flow:           GridLayout.TopToBottom
-
-                        TextField {
-                            id:                 textFieldLongitude
-                            placeholderText:    qsTr("Origin Lon")
-                            Layout.row:         0
-                        }
-
-                        TextField {
-                            id:                 textFieldLatitude
-                            placeholderText:    qsTr("Origin Lat")
-                            Layout.row:         1
-                        }
-
-                        TextField {
-                            id:                 textFieldRotation
-                            placeholderText:    qsTr("Rotation (°)")
-                            Layout.row  :       2
-                        }
-
-                        QGCButton {
-                            anchors.left:   parent.left
-                            anchors.right:  parent.right
-                            text:           qsTr("Build Fence")
-
-                            onClicked: {
-
-                            }
-
-                        }
-                    }
-
-                    // GDP - Stop
 
                     SectionHeader {
                         id:     circleSection
@@ -346,6 +305,57 @@ QGCFlickable {
                             }
                         }
                     } // GridLayout
+
+                    // GDP - Start
+                    SectionHeader {
+                        id:     rectangleSection
+                        text:   qsTr("GeoFence Competition")
+                    }
+
+                    GridLayout {
+                        anchors.left:   parent.left
+                        anchors.right:  parent.right
+                        rows:           4
+                        flow:           GridLayout.TopToBottom
+
+                        QGCTextField {
+                            id:                 textFieldLatitude
+                            placeholderText:    qsTr("Origin Latitude")
+
+                            validator:          RegExpValidator{ regExp: /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/ }
+                            Layout.row:         0
+                        }
+
+                        QGCTextField {
+                            id:                 textFieldLongitude
+                            placeholderText:    qsTr("Origin Longitude")
+                            validator:          RegExpValidator{ regExp: /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/}
+                            Layout.row:         1
+                        }
+
+                        QGCTextField {
+                            id:                 textFieldRotation
+                            placeholderText:    qsTr("Rotation (°)")
+                            validator:          IntValidator{}
+                            Layout.row  :       2
+                        }
+
+
+                        QGCButton {
+                            anchors.left:   parent.left
+                            anchors.right:  parent.right
+                            text:           qsTr("Build Polygon Fence")
+
+                            onClicked: {
+                                var lon = textFieldLongitude.text
+                                var lat = textFieldLatitude.text
+                                var rot = textFieldRotation.text
+                                myGeoFenceController.buildCompetitionPolygonFence(lat, lon, rot)
+                            }
+                        }
+                    }
+
+                    // GDP - Stop
                 }
             }
         }
