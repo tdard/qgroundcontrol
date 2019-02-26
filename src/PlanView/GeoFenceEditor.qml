@@ -325,15 +325,14 @@ QGCFlickable {
                     }
 
                     GridLayout {
-                        anchors.left:   parent.left
-                        anchors.right:  parent.right
-                        rows:           4
-                        flow:           GridLayout.TopToBottom
+                        anchors.left:           parent.left
+                        anchors.right:          parent.right
+                        rows:                   6
+                        flow:                   GridLayout.TopToBottom
 
                         QGCTextField {
                             id:                 textFieldLatitude
                             placeholderText:    qsTr("Origin Latitude")
-
                             validator:          RegExpValidator{ regExp: /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/ }
                             Layout.row:         0
                         }
@@ -346,10 +345,9 @@ QGCFlickable {
                         }
 
                         QGCButton {
-                            id:             buttonBuildFence
-                            text:           qsTr("Build Polygon Fence")
-                            Layout.row:     2
-                            Layout.alignment:   Qt.AlignHCenter
+                            id:                 buttonBuildFence
+                            text:               qsTr("Build Polygon Fence")
+                            Layout.row:         2
                             onClicked: {
                                 var lon = textFieldLongitude.text
                                 var lat = textFieldLatitude.text
@@ -363,11 +361,12 @@ QGCFlickable {
                             validator:          IntValidator{}
                             Layout.row  :       3
                         }
+
+
                         QGCButton {
-                            id:             buttonRotateFence
-                            text:           qsTr("Rotate")
-                            Layout.row:     4
-                            Layout.alignment:   Qt.AlignHCenter
+                            id:                 buttonRotateFence
+                            text:               qsTr("Rotate")
+                            Layout.row:         4
                             onClicked: {
                                 var rot = (textFieldRotation.text)? parseInt(textFieldRotation.text) : 0
                                 console.log(rot)
@@ -375,6 +374,17 @@ QGCFlickable {
                             /*Should be done in GeoFenceMapVisuals ?*/
                             }
                         }
+
+                        QGCButton {
+                            id:                 buttonDelete
+                            text:               qsTr("Delete")
+                            Layout.row:         5
+                            onClicked: {
+                                console.log("Delete")
+                                myGeoFenceController.deletePolygonInfo(0)
+                            }
+                        }
+
                     }
                     // GDP - Stop
                 }
