@@ -497,11 +497,17 @@ void GeoFenceController::clearAllInteractive(void)
 }
 
 //GDP - Start
-void GeoFenceController::addInclusionPolygonInfo(QGeoCoordinate topLeft, QGeoCoordinate bottomRight)
+void GeoFenceController::addInclusionPolygonInfo(QGeoCoordinate center, int height, int width)
 {
     qDebug() << "addInclusionPolygonInfo";
-    QGeoCoordinate topRight(topLeft.latitude(), bottomRight.longitude());
-    QGeoCoordinate bottomLeft(bottomRight.latitude(), topLeft.longitude());
+
+    double halfWidthMeters = width / 2.0;
+    double halfHeightMeters = height / 2.0;
+
+    QGeoCoordinate topLeft =           center.atDistanceAndAzimuth(halfWidthMeters, -90).atDistanceAndAzimuth(halfHeightMeters, 0);
+    QGeoCoordinate topRight =          center.atDistanceAndAzimuth(halfWidthMeters, 90).atDistanceAndAzimuth(halfHeightMeters, 0);
+    QGeoCoordinate bottomLeft =        center.atDistanceAndAzimuth(halfWidthMeters, -90).atDistanceAndAzimuth(halfHeightMeters, 180);
+    QGeoCoordinate bottomRight =       center.atDistanceAndAzimuth(halfWidthMeters, 90).atDistanceAndAzimuth(halfHeightMeters, 180);
 
     QGCFencePolygon* polygonInfo = new QGCFencePolygon(true /* inclusion */, this);
     polygonInfo->appendVertex(topLeft);
@@ -509,6 +515,8 @@ void GeoFenceController::addInclusionPolygonInfo(QGeoCoordinate topLeft, QGeoCoo
     polygonInfo->appendVertex(bottomRight);
     polygonInfo->appendVertex(bottomLeft);
     _polygonsInfo.append(polygonInfo);
+
+    qDebug() << "Number of PolygonInfo: " << _polygonsInfo.count();
 
     clearAllInteractive();
     polygonInfo->setInteractive(true);

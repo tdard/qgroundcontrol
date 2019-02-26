@@ -20,6 +20,11 @@
 
 Q_DECLARE_LOGGING_CATEGORY(GeoFenceControllerLog)
 
+// GDP - Start
+#define POLYGON_INFO_WIDTH  100
+#define POLYGON_INFO_HEIGHT 100
+// GDP - Stop
+
 class GeoFenceManager;
 
 class GeoFenceController : public PlanElementController
@@ -64,7 +69,7 @@ public:
     // GDP - Start
     ///     @param topLeft - Top left coordinate or map viewport
     ///     @param topLeft - Bottom right left coordinate or map viewport
-    Q_INVOKABLE void addInclusionPolygonInfo(QGeoCoordinate topLeft, QGeoCoordinate bottomRight);
+    Q_INVOKABLE void addInclusionPolygonInfo(QGeoCoordinate center, int height = POLYGON_INFO_HEIGHT, int width = POLYGON_INFO_WIDTH);
 
     ///     @param index Index of poygon to delete
     Q_INVOKABLE void deletePolygonInfo(int index);

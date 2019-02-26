@@ -22,10 +22,14 @@ QGCFlickable {
     readonly property real  _radius:            ScreenTools.defaultFontPixelWidth / 2
 
     // GDP - Start
+    property  var       _coordinate
+    property  bool      _clicked:               false
     function setMouseCoord(coordinate)
     {
         textFieldLatitude.text = coordinate.latitude
         textFieldLongitude.text = coordinate.longitude
+        _coordinate = coordinate
+        _clicked = true
     }
     // GDP - Stop
 
@@ -343,14 +347,14 @@ QGCFlickable {
 
                         QGCButton {
                             id:             buttonBuildFence
-                            anchors.left:   parent.left
-                            anchors.right:  parent.right
                             text:           qsTr("Build Polygon Fence")
                             Layout.row:     2
+                            Layout.alignment:   Qt.AlignHCenter
                             onClicked: {
                                 var lon = textFieldLongitude.text
                                 var lat = textFieldLatitude.text
                                 console.log(lon, lat)
+                                myGeoFenceController.addInclusionPolygonInfo((_clicked) ? _coordinate : QtPositioning.coordinate(parseFloat(lat), parseFloat(lon)))
                             }
                         }
                         QGCTextField {
@@ -361,13 +365,13 @@ QGCFlickable {
                         }
                         QGCButton {
                             id:             buttonRotateFence
-                            anchors.left:   parent.left
-                            anchors.right:  parent.right
                             text:           qsTr("Rotate")
                             Layout.row:     4
+                            Layout.alignment:   Qt.AlignHCenter
                             onClicked: {
-                                var rot = textFieldRotation.text
+                                var rot = parseInt(textFieldRotation.text)
                                 console.log(rot)
+                            /*Should be done in GeoFenceMapVisuals ?*/
                             }
                         }
                     }
