@@ -36,6 +36,9 @@ const char* GeoFenceController::_jsonFileTypeValue =        "GeoFence";
 const char* GeoFenceController::_jsonBreachReturnKey =      "breachReturn";
 const char* GeoFenceController::_jsonPolygonsKey =          "polygons";
 const char* GeoFenceController::_jsonCirclesKey =           "circles";
+// GDP - Start
+const char* GeoFenceController::_jsonPolygonsInfoKey =       "polygonsInfo";
+//GDP - Stop
 
 const char* GeoFenceController::_px4ParamCircularFence =    "GF_MAX_HOR_DIST";
 
@@ -48,6 +51,9 @@ GeoFenceController::GeoFenceController(PlanMasterController* masterController, Q
 {
     connect(&_polygons, &QmlObjectListModel::countChanged, this, &GeoFenceController::_updateContainsItems);
     connect(&_circles,  &QmlObjectListModel::countChanged, this, &GeoFenceController::_updateContainsItems);
+    // GDP - Start
+    connect(&_polygonsInfo, &QmlObjectListModel::countChanged, this, &GeoFenceController::_updateContainsItems);
+    //GDP - Stop
 
     managerVehicleChanged(_managerVehicle);
 }
@@ -171,6 +177,22 @@ bool GeoFenceController::load(const QJsonObject& json, QString& errorString)
         _circles.append(fenceCircle);
     }
 
+    // GDP - Start
+    QJsonArray jsonPolygonInfoArray = json[_jsonPolygonsInfoKey].toArray();
+    for (const QJsonValue& jsonPolygonInfoValue: jsonPolygonInfoArray) {
+        if (jsonPolygonInfoValue.type() != QJsonValue::Object) {
+            errorString = tr("GeoFence polygonInfo not stored as object");
+            return false;
+        }
+
+        QGCFencePolygon* fencePolygonInfo = new QGCFencePolygon(false /* inclusion */, this /* parent */);
+        if (!fencePolygonInfo->loadFromJson(jsonPolygonInfoValue.toObject(), true /* required */, errorString)) {
+            return false;
+        }
+        _polygonsInfo.append(fencePolygonInfo);
+    }
+    // GDP - Stop
+
     setDirty(false);
     _signalAll();
 
@@ -198,6 +220,17 @@ void GeoFenceController::save(QJsonObject& json)
         jsonCircleArray.append(jsonCircle);
     }
     json[_jsonCirclesKey] = jsonCircleArray;
+
+    // GDP - Start
+    QJsonArray jsonPolygonInfoArray;
+    for (int i=0; i<_polygonsInfo.count(); i++) {
+        QJsonObject jsonPolygonInfo;
+        QGCFencePolygon* fencePolygonInfo = _polygonsInfo.value<QGCFencePolygon*>(i);
+        fencePolygonInfo->saveToJson(jsonPolygonInfo);
+        jsonPolygonInfoArray.append(jsonPolygonInfo);
+    }
+    json[_jsonPolygonsInfoKey] = jsonPolygonInfoArray;
+    // GDP - Stop
 }
 
 void GeoFenceController::removeAll(void)
@@ -267,6 +300,12 @@ void GeoFenceController::setDirty(bool dirty)
                 QGCFenceCircle* circle = _circles.value<QGCFenceCircle*>(i);
                 circle->setDirty(false);
             }
+            // GDP - Start
+            for (int i=0; i<_polygonsInfo.count(); i++) {
+                QGCFencePolygon* polygonInfo = _polygonsInfo.value<QGCFencePolygon*>(i);
+                polygonInfo->setDirty(false);
+            }
+            // GDP - Stop
         }
         emit dirtyChanged(dirty);
     }
@@ -339,7 +378,7 @@ void GeoFenceController::_managerRemoveAllComplete(bool error)
 
 bool GeoFenceController::containsItems(void) const
 {
-    return _polygons.count() > 0 || _circles.count() > 0;
+    return _polygons.count() > 0 || _circles.count() /* GDP - Start */|| _polygonsInfo.count() /* GDP - Stop */ > 0;
 }
 
 void GeoFenceController::_updateContainsItems(void)
@@ -404,10 +443,6 @@ void GeoFenceController::addInclusionPolygon(QGeoCoordinate topLeft, QGeoCoordin
 
     clearAllInteractive();
     polygon->setInteractive(true);
-
-    // GDP - Start
-    qDebug() << "I want to send a signal sending the polygon to the Stratege so it can update the position";
-    // GDP - Stop
 }
 
 void GeoFenceController::addInclusionCircle(QGeoCoordinate topLeft, QGeoCoordinate bottomRight)
@@ -462,11 +497,37 @@ void GeoFenceController::clearAllInteractive(void)
 }
 
 //GDP - Start
-void GeoFenceController::buildCompetitionPolygonFence(QString origin_lat, QString origin_lon, QString rotation)
+void GeoFenceController::addInclusionPolygonInfo(QGeoCoordinate topLeft, QGeoCoordinate bottomRight)
 {
-    qDebug() << "rotation: " << rotation << ", origin: " << origin_lat << " " << origin_lon;
-    QGeoCoordinate origin = QGeoCoordinate(origin_lat.toDouble(), origin_lon.toDouble());
-    qDebug() << origin.latitude();
+    qDebug() << "addInclusionPolygonInfo";
+    QGeoCoordinate topRight(topLeft.latitude(), bottomRight.longitude());
+    QGeoCoordinate bottomLeft(bottomRight.latitude(), topLeft.longitude());
+
+    QGCFencePolygon* polygonInfo = new QGCFencePolygon(true /* inclusion */, this);
+    polygonInfo->appendVertex(topLeft);
+    polygonInfo->appendVertex(topRight);
+    polygonInfo->appendVertex(bottomRight);
+    polygonInfo->appendVertex(bottomLeft);
+    _polygonsInfo.append(polygonInfo);
+
+    clearAllInteractive();
+    polygonInfo->setInteractive(true);
+}
+
+void GeoFenceController::deletePolygonInfo(int index)
+{
+    qDebug()<< "deletePolygonInfo";
+    if (index < 0 || index > _polygonsInfo.count() - 1){
+        return;
+    }
+
+    QGCFencePolygon* polygonInfo = qobject_cast<QGCFencePolygon*>(_polygonsInfo.removeAt(index));
+    polygonInfo->deleteLater();
+}
+
+void GeoFenceController::rotatePolygonInfo(int index, int rotation)
+{
+    qDebug() << "rotatePolygonInfo";
 }
 // GDP - Stop
 

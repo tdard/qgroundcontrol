@@ -237,7 +237,7 @@ QGCFlickable {
                     GridLayout {
                         anchors.left:   parent.left
                         anchors.right:  parent.right
-                        columns:        4
+                        columns:        5
                         flow:           GridLayout.TopToBottom
                         visible:        polygonSection.checked && myGeoFenceController.circles.count > 0
 
@@ -341,54 +341,33 @@ QGCFlickable {
                             Layout.row:         1
                         }
 
+                        QGCButton {
+                            id:             buttonBuildFence
+                            anchors.left:   parent.left
+                            anchors.right:  parent.right
+                            text:           qsTr("Build Polygon Fence")
+                            Layout.row:     2
+                            onClicked: {
+                                var lon = textFieldLongitude.text
+                                var lat = textFieldLatitude.text
+                                console.log(lon, lat)
+                            }
+                        }
                         QGCTextField {
                             id:                 textFieldRotation
                             placeholderText:    qsTr("Rotation (°)")
                             validator:          IntValidator{}
-                            Layout.row  :       2
+                            Layout.row  :       3
                         }
-
-
                         QGCButton {
+                            id:             buttonRotateFence
                             anchors.left:   parent.left
                             anchors.right:  parent.right
-                            text:           qsTr("Build Polygon Fence")
-
+                            text:           qsTr("Rotate")
+                            Layout.row:     4
                             onClicked: {
-                                var lon = textFieldLongitude.text
-                                var lat = textFieldLatitude.text
                                 var rot = textFieldRotation.text
-                                myGeoFenceController.buildCompetitionPolygonFence(lat, lon, rot)
-
-                                var def_lat = -120.083923
-                                var def_lon = 38.965767
-
-                                var point = flightMap.fromCoordinate(QtPositioning.coordinate(def_lat, def_lon), false /* clipToViewPort */)
-
-                                var rect = Qt.rect(point.x, point.y, flightMap.centerViewport.width, flightMap.centerViewport.height)
-
-
-
-//                                var topLeftCoord = flightMap.toCoordinate(Qt.point(rect.x, rect.y), false /* clipToViewPort */)
-//                                var bottomRightCoord = flightMap.toCoordinate(Qt.point(rect.x + rect.width, rect.y + rect.height), false /* clipToViewPort */)
-//                                myGeoFenceController.addInclusionPolygon(topLeftCoord, bottomRightCoord)
-
-                                console.log("position desiree", rect.x, rect.y)
-
-                                rect = Qt.rect(flightMap.centerViewport.x, flightMap.centerViewport.y, flightMap.centerViewport.width, flightMap.centerViewport.height)
-
-
-                                var coordinateLog = flightMap.toCoordinate(Qt.point(rect.x, rect.y), false /* clipToViewPort */)
-                                console.log(coordinateLog)
-                                console.log(coordinateLog.latitude, coordinateLog.longitude)
-
-                                //atDistanceAndAzimuth(distance, azimuth)
-                                //map.toCoordinate(Qt.point(mouse.x, mouse.y), false /* clipToViewPort */)
-                                console.log("position reelle ",rect.x, rect.y)
-                                var topLeftCoord = flightMap.toCoordinate(Qt.point(rect.x, rect.y), false /* clipToViewPort */)
-                                var bottomRightCoord = flightMap.toCoordinate(Qt.point(rect.x + rect.width, rect.y + rect.height), false /* clipToViewPort */)
-                                myGeoFenceController.addInclusionPolygon(topLeftCoord, bottomRightCoord)
-
+                                console.log(rot)
                             }
                         }
                     }
@@ -397,16 +376,4 @@ QGCFlickable {
             }
         }
     } // Rectangle
-    Text {
-        id: info
-        anchors.left:   parent.left
-        anchors.right:  parent.right
-        text: qsTr("text")
-    }
-    MouseArea {
-        anchors.fill: flightMap
-        onPressed: {
-            if (mouse.button == Qt.LeftButton) {info.text = "yess"}
-        }
-    }
 }

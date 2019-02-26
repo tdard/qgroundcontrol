@@ -32,6 +32,9 @@ public:
 
     Q_PROPERTY(QmlObjectListModel*  polygons            READ polygons                                       CONSTANT)
     Q_PROPERTY(QmlObjectListModel*  circles             READ circles                                        CONSTANT)
+    // GDP - Start
+    Q_PROPERTY(QmlObjectListModel*  polygonsInfo        READ polygonsInfo                                   CONSTANT)
+    //GDP - Stop
     Q_PROPERTY(QGeoCoordinate       breachReturnPoint   READ breachReturnPoint  WRITE setBreachReturnPoint  NOTIFY breachReturnPointChanged)
 
     // Hack to expose PX4 circular fence controlled by GF_MAX_HOR_DIST
@@ -59,7 +62,14 @@ public:
     Q_INVOKABLE void clearAllInteractive(void);
 
     // GDP - Start
-    Q_INVOKABLE void buildCompetitionPolygonFence(QString origin_lat = NULL, QString origin_lon = NULL, QString rotation = NULL);
+    ///     @param topLeft - Top left coordinate or map viewport
+    ///     @param topLeft - Bottom right left coordinate or map viewport
+    Q_INVOKABLE void addInclusionPolygonInfo(QGeoCoordinate topLeft, QGeoCoordinate bottomRight);
+
+    ///     @param index Index of poygon to delete
+    Q_INVOKABLE void deletePolygonInfo(int index);
+
+    Q_INVOKABLE void rotatePolygonInfo(int index, int rotation);
     // GDP - Stop
 
     double paramCircularFence(void);
@@ -82,6 +92,9 @@ public:
 
     QmlObjectListModel* polygons                (void) { return &_polygons; }
     QmlObjectListModel* circles                 (void) { return &_circles; }
+    // GDP - Start
+    QmlObjectListModel* polygonsInfo            (void) { return &_polygonsInfo; }
+    //GDP - Stop
     QGeoCoordinate      breachReturnPoint       (void) const { return _breachReturnPoint; }
 
     void setBreachReturnPoint(const QGeoCoordinate& breachReturnPoint);
@@ -111,6 +124,9 @@ private:
     bool                _dirty;
     QmlObjectListModel  _polygons;
     QmlObjectListModel  _circles;
+    // GDP - Start
+    QmlObjectListModel  _polygonsInfo;
+    //GDP - Stop
     QGeoCoordinate      _breachReturnPoint;
     bool                _itemsRequested;
     Fact*               _px4ParamCircularFenceFact;
@@ -123,6 +139,9 @@ private:
     static const char* _jsonBreachReturnKey;
     static const char* _jsonPolygonsKey;
     static const char* _jsonCirclesKey;
+    // GDP - Start
+    static const char*  _jsonPolygonsInfoKey;
+    //GDP - Stop
 };
 
 #endif
