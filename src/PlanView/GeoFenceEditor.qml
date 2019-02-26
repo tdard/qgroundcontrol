@@ -369,8 +369,9 @@ QGCFlickable {
                             Layout.row:     4
                             Layout.alignment:   Qt.AlignHCenter
                             onClicked: {
-                                var rot = parseInt(textFieldRotation.text)
+                                var rot = (textFieldRotation.text)? parseInt(textFieldRotation.text) : 0
                                 console.log(rot)
+                                myGeoFenceController.rotatePolygonInfo(0, rot)
                             /*Should be done in GeoFenceMapVisuals ?*/
                             }
                         }

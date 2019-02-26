@@ -536,6 +536,11 @@ void GeoFenceController::deletePolygonInfo(int index)
 void GeoFenceController::rotatePolygonInfo(int index, int rotation)
 {
     qDebug() << "rotatePolygonInfo";
+    qDebug() << rotation;
+
+    //Get center
+
+    //Move each vertex of the desired angle
 }
 // GDP - Stop
 

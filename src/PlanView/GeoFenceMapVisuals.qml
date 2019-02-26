@@ -33,6 +33,9 @@ Item {
     property var    _paramCircleFenceComponent
     property var    _polygons:                  myGeoFenceController.polygons
     property var    _circles:                   myGeoFenceController.circles
+    // GDP - Start
+    property var    _polygonsInfo:              myGeoFenceController.polygonsInfo
+    // GDP - Stop
     property color  _borderColor:               "orange"
     property int    _borderWidthInclusion:      2
     property int    _borderWidthExclusion:      0
@@ -124,6 +127,21 @@ Item {
             interiorOpacity:    object.inclusion ? _interiorOpacityInclusion : _interiorOpacityExclusion
         }
     }
+
+    // GDP - Start
+    Instantiator {
+        model: _polygonsInfo
+
+        delegate : QGCMapPolygonVisuals {
+            mapControl:         map
+            mapPolygon:         object
+            borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
+            borderColor:        "darkmagenta"
+            interiorColor:      object.inclusion ? _interiorColorInclusion : _interiorColorExclusion
+            interiorOpacity:    object.inclusion ? _interiorOpacityInclusion : _interiorOpacityExclusion
+        }
+    }
+    // GDP - Stop
 
     // Circular geofence specified from parameter
     Component {
