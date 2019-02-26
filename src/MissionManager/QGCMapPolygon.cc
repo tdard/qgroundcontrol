@@ -400,6 +400,28 @@ QList<QPointF> QGCMapPolygon::nedPolygon(void) const
     return nedPolygon;
 }
 
+// GDP - Start
+QList<QPointF> QGCMapPolygon::nedPolygon(QGeoCoordinate origin) const
+{
+    QList<QPointF>  nedPolygon;
+
+    if (count() > 0) {
+        for (int i=0; i<_polygonModel.count(); i++) {
+            double y, x, down;
+            QGeoCoordinate vertex = vertexCoordinate(i);
+            if (i == 0) {
+                // This avoids a nan calculation that comes out of convertGeoToNed
+                x = y = 0;
+            } else {
+                convertGeoToNed(vertex, origin, &y, &x, &down);
+            }
+            nedPolygon += QPointF(x, y);
+        }
+    }
+
+    return nedPolygon;
+}
+// GDP - Stop
 
 void QGCMapPolygon::offset(double distance)
 {

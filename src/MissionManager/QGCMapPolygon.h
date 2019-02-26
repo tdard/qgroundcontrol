@@ -83,6 +83,10 @@ public:
     /// Convert polygon to NED and return (D is ignored)
     QList<QPointF> nedPolygon(void) const;
 
+    // GDP - Start
+    QList<QPointF> nedPolygon(QGeoCoordinate origin) const;
+    // GDP - Stop
+
     /// Returns the area of the polygon in meters squared
     double area(void) const;
 

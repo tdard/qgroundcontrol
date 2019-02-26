@@ -23,6 +23,7 @@ Q_DECLARE_LOGGING_CATEGORY(GeoFenceControllerLog)
 // GDP - Start
 #define POLYGON_INFO_WIDTH  100
 #define POLYGON_INFO_HEIGHT 100
+#define M_DEG_TO_RAD (M_PI / 180.0)
 // GDP - Stop
 
 class GeoFenceManager;
@@ -74,7 +75,7 @@ public:
     ///     @param index Index of poygon to delete
     Q_INVOKABLE void deletePolygonInfo(int index);
 
-    Q_INVOKABLE void rotatePolygonInfo(int index, int rotation);
+    Q_INVOKABLE void rotatePolygonInfo(int index, int rotation, int height = POLYGON_INFO_HEIGHT, int width = POLYGON_INFO_WIDTH);
     // GDP - Stop
 
     double paramCircularFence(void);

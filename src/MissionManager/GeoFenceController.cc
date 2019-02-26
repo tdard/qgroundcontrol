@@ -533,14 +533,32 @@ void GeoFenceController::deletePolygonInfo(int index)
     polygonInfo->deleteLater();
 }
 
-void GeoFenceController::rotatePolygonInfo(int index, int rotation)
+void GeoFenceController::rotatePolygonInfo(int index, int rotation, int height, int width)
 {
     qDebug() << "rotatePolygonInfo";
     qDebug() << rotation;
 
+    double halfWidthMeters = width / 2.0;
+    double halfHeightMeters = height / 2.0;
+
     //Get center
+    QGCFencePolygon* polygonInfo = _polygonsInfo.value<QGCFencePolygon*>(index);
+    QGeoCoordinate center = polygonInfo->center();
 
     //Move each vertex of the desired angle
+    const QGeoCoordinate topLeft =           center.atDistanceAndAzimuth(sqrt(halfWidthMeters*halfWidthMeters + halfHeightMeters*halfHeightMeters), -45 - rotation);
+    const QGeoCoordinate topRight =          center.atDistanceAndAzimuth(sqrt(halfWidthMeters*halfWidthMeters + halfHeightMeters*halfHeightMeters), 45 - rotation);
+    const QGeoCoordinate bottomLeft =        center.atDistanceAndAzimuth(sqrt(halfWidthMeters*halfWidthMeters + halfHeightMeters*halfHeightMeters), -135 - rotation);
+    const QGeoCoordinate bottomRight =       center.atDistanceAndAzimuth(sqrt(halfWidthMeters*halfWidthMeters + halfHeightMeters*halfHeightMeters), 135 - rotation);
+
+    polygonInfo->adjustVertex(0, topLeft);
+    polygonInfo->adjustVertex(1, topRight);
+    polygonInfo->adjustVertex(2, bottomRight);
+    polygonInfo->adjustVertex(3, bottomLeft);
+
+    clearAllInteractive();
+    polygonInfo->setInteractive(true);
+
 }
 // GDP - Stop
 
