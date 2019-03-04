@@ -46,6 +46,7 @@ Item {
     property real _zorderCenterHandle:  QGroundControl.zOrderMapItems + 1   // Lowest such that drag or split takes precedence
 
     function addVisuals() {
+        console.log("QGCMapPolygonVisuals: addVisuals(). Add the visual information about a new created QGCMapPolygonVisual.")
         _polygonComponent = polygonComponent.createObject(mapControl)
         mapControl.addMapItem(_polygonComponent)
     }

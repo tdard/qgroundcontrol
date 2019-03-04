@@ -170,6 +170,7 @@ FlightMap {
         target: _missionController
 
         onNewItemsFromVehicle: {
+            console.log("onNewItemsFromVehicle. -> comment this section does not prevent the display of uploaded geofence")
             var visualItems = _missionController.visualItems
             if (visualItems && visualItems.count !== 1) {
                 mapFitFunctions.fitMapViewportToMissionItems()
@@ -520,5 +521,17 @@ FlightMap {
             border.width:   object.lineWidth
         }
     }
+
+    // GDP - Start
+    MapItemView {
+        model:              _geoFenceController.polygonsInfo
+        delegate: QGCMapPolygonVisuals {
+            mapControl:         map
+            mapPolygon:         object
+            borderWidth:        4
+            borderColor:        "red"
+        }
+    }
+    // GDP - Stop
 
 }

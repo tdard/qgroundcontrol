@@ -45,7 +45,7 @@ QGCView {
     readonly property real  _margin:                    ScreenTools.defaultFontPixelHeight * 0.5
     readonly property real  _radius:                    ScreenTools.defaultFontPixelWidth  * 0.5
     readonly property var   _activeVehicle:             QGroundControl.multiVehicleManager.activeVehicle
-    readonly property real  _rightPanelWidth:           Math.min(parent.width / 3, ScreenTools.defaultFontPixelWidth * 30)
+    readonly property real  _rightPanelWidth:           Math.min(parent.width / 5, ScreenTools.defaultFontPixelWidth * 50)
     readonly property real  _toolButtonTopMargin:       parent.height - ScreenTools.availableHeight + (ScreenTools.defaultFontPixelHeight / 2)
     readonly property var   _defaultVehicleCoordinate:  QtPositioning.coordinate(37.803784, -122.462276)
     readonly property bool  _waypointsOnlyMode:         QGroundControl.corePlugin.options.missionWaypointsOnly
@@ -68,6 +68,9 @@ QGCView {
     readonly property int       _layerMission:              1
     readonly property int       _layerGeoFence:             2
     readonly property int       _layerRallyPoints:          3
+    // GDP - Start
+    readonly property int       _layerZones:                4
+    // GDP - Stop
     readonly property string    _armedVehicleUploadPrompt:  qsTr("Vehicle is currently armed. Do you want to upload the mission to the vehicle?")
 
     Component.onCompleted: {
@@ -281,6 +284,7 @@ QGCView {
         onNewItemsFromVehicle: {
             if (_visualItems && _visualItems.count != 1) {
                 mapFitFunctions.fitMapViewportToMissionItems()
+                            console.log("New Item added !")
             }
             _missionController.setCurrentPlanViewIndex(0, true)
         }
@@ -784,6 +788,11 @@ QGCView {
                                         case planElementRallyPoints:
                                             _editingLayer = _layerRallyPoints
                                             break
+                                        // GDP - Start
+                                        case planElementZones:
+                                            _editingLayer = _layerZones
+                                            break
+                                        // GDP - Stop
                                         }
                                     }
                                 }
@@ -809,6 +818,15 @@ QGCView {
                                     visible:        QGroundControl.corePlugin.options.enablePlanViewSelector
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
+                                // GDP - Start
+                                QGCRadioButton {
+                                    id:             planElementZones
+                                    exclusiveGroup: planElementSelectorGroup
+                                    text:           qsTr("Zones")
+                                    visible:        QGroundControl.corePlugin.options.enablePlanViewSelector
+                                    anchors.verticalCenter: parent.verticalCenter
+                                }
+                                // GDP - Stop
                             }
                         }
                     }
@@ -892,6 +910,19 @@ QGCView {
                 rallyPoint:             _rallyPointController.currentRallyPoint
                 controller:             _rallyPointController
             }
+            // GDP - Start
+            ZoneEditor {
+                id:                     zoneEditor
+                anchors.top:            rightControls.bottom
+                anchors.topMargin:      ScreenTools.defaultFontPixelHeight * 0.5
+                anchors.bottom:         parent.bottom
+                anchors.left:           parent.left
+                anchors.right:          parent.right
+                myGeoFenceController:   _geoFenceController
+                flightMap:              editorMap
+                visible:                _editingLayer == _layerZones
+            }
+            // GDP - Stop
         }
 
         MapScale {

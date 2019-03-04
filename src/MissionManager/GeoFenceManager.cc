@@ -117,12 +117,21 @@ void GeoFenceManager::_sendComplete(bool error)
     if (error) {
         _polygons.clear();
         _circles.clear();
+        // GDP - Start
+        _polygonsInfo.clear();
+        // GDP - Stop
     } else {
         _polygons = _sendPolygons;
         _circles = _sendCircles;
+        // GDP - Start
+        _polygonsInfo = _sendPolygonsInfo;
+        // GDP - Stop
     }
     _sendPolygons.clear();
     _sendCircles.clear();
+    // GDP - Start
+    _sendPolygonsInfo.clear();
+    // GDP - Stop
     emit sendComplete(error);
 }
 

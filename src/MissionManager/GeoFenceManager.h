@@ -96,10 +96,17 @@ private:
     PlanManager             _planManager;
     QList<QGCFencePolygon>  _polygons;
     QList<QGCFenceCircle>   _circles;
+    // GDP - Start
+    QList<QGCFencePolygon> _polygonsInfo;
+    // GDP - Stop
     QGeoCoordinate          _breachReturnPoint;
     bool                    _firstParamLoadComplete;
     QList<QGCFencePolygon>  _sendPolygons;
     QList<QGCFenceCircle>   _sendCircles;
+    // GDP - Start
+    QList<QGCFencePolygon> _sendPolygonsInfo;
+    // GDP - Stop
+
 #if defined(QGC_AIRMAP_ENABLED)
     AirspaceManager*         _airspaceManager;
 #endif

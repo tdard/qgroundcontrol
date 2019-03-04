@@ -375,6 +375,9 @@ INCLUDEPATH += \
     src/ui/px4_configuration \
     src/ui/toolbar \
     src/ui/uas \
+    # GDP - Start
+    src/Stratege \
+    # GDP - Stop
 
 FORMS += \
     src/ui/MainWindow.ui \

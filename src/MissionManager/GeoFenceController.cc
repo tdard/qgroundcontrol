@@ -234,7 +234,7 @@ void GeoFenceController::save(QJsonObject& json)
 }
 
 void GeoFenceController::removeAll(void)
-{    
+{
     setBreachReturnPoint(QGeoCoordinate());
     _polygons.clearAndDeleteContents();
     _circles.clearAndDeleteContents();
@@ -272,6 +272,9 @@ void GeoFenceController::sendToVehicle(void)
     } else {
         qCDebug(GeoFenceControllerLog) << "GeoFenceController::sendToVehicle";
         _geoFenceManager->sendToVehicle(_breachReturnPoint, _polygons, _circles);
+        // GDP - Start
+        //_geoFenceManager->sendToVehicle(_polygonsInfo);
+        // GDP - Stop
         setDirty(false);
     }
 }
@@ -328,7 +331,8 @@ void GeoFenceController::_setFenceFromManager(const QList<QGCFencePolygon>& poly
 {
     _polygons.clearAndDeleteContents();
     _circles.clearAndDeleteContents();
-
+    qDebug() << _polygons.count() << "polygons";
+    qDebug() << _polygonsInfo.count() << "polygonsinfo";
     for (int i=0; i<polygons.count(); i++) {
         _polygons.append(new QGCFencePolygon(polygons[i], this));
     }
