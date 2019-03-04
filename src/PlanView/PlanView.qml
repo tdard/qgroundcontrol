@@ -45,7 +45,7 @@ QGCView {
     readonly property real  _margin:                    ScreenTools.defaultFontPixelHeight * 0.5
     readonly property real  _radius:                    ScreenTools.defaultFontPixelWidth  * 0.5
     readonly property var   _activeVehicle:             QGroundControl.multiVehicleManager.activeVehicle
-    readonly property real  _rightPanelWidth:           Math.min(parent.width / 5, ScreenTools.defaultFontPixelWidth * 50)
+    readonly property real  _rightPanelWidth:           Math.min(parent.width / 2, ScreenTools.defaultFontPixelWidth * 45)
     readonly property real  _toolButtonTopMargin:       parent.height - ScreenTools.availableHeight + (ScreenTools.defaultFontPixelHeight / 2)
     readonly property var   _defaultVehicleCoordinate:  QtPositioning.coordinate(37.803784, -122.462276)
     readonly property bool  _waypointsOnlyMode:         QGroundControl.corePlugin.options.missionWaypointsOnly
@@ -512,6 +512,8 @@ QGCView {
                     case _layerGeoFence:
                         myGeoFenceEditor.setMouseCoord(coordinate)
                         break
+                    case _layerZones:
+                        myGeoFenceEditor.setMouseCoord(coordinate)
                     //GDP - Stop
                     }
                 }

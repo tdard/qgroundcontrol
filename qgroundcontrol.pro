@@ -629,6 +629,9 @@ HEADERS += \
     src/uas/UASInterface.h \
     src/uas/UASMessageHandler.h \
     src/UTM.h \
+    # GDP - Start
+    src/Stratege/ZoneController.h \
+    # GDP - Stop
 
 
 AndroidBuild {
@@ -830,6 +833,9 @@ SOURCES += \
     src/main.cc \
     src/uas/UAS.cc \
     src/uas/UASMessageHandler.cc \
+    # GDP - Start
+    src/Stratege/ZoneController.cc \
+    # GDP - Stop
     src/UTM.cpp \
 
 DebugBuild {

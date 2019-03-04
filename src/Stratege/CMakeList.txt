@@ -1,0 +1,14 @@
+add_library(Stratege
+	ZoneController.cc
+	
+)
+
+target_link_libraries(Stratege
+	PUBLIC
+		Qt5::Xml
+                qgc
+	PRIVATE
+		qgc
+)
+
+target_include_directories(Stratege INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
