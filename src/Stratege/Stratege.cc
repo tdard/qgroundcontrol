@@ -36,6 +36,7 @@ Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolb
     _time.start();
     _mapVehicle2VehicleAttribut = new QMap<Vehicle*, VehicleAttribut*>();
     _mapTargetsPositions2TargetsVelocities = new QMap<QGeoCoordinate, QVector3D>();
+    _zoneController = new ZoneController();
 }
 
 void Stratege::setToolbox(QGCToolbox *toolbox)
@@ -43,6 +44,7 @@ void Stratege::setToolbox(QGCToolbox *toolbox)
     QGCTool::setToolbox(toolbox);
     connect(toolbox->multiVehicleManager(), &MultiVehicleManager::vehicleAdded, this, &Stratege::_addedVehicle);
     connect(toolbox->multiVehicleManager(), &MultiVehicleManager::vehicleRemoved, this, &Stratege::_removedVehicle);
+    connect(_zoneController, &ZoneController::updateZones, this, &Stratege::_zoneUpdate);
 }
 
 void Stratege::abortMission()
@@ -116,6 +118,11 @@ void Stratege::_removedVehicle(Vehicle* vehicle)
 //    Modify List of unoccupied zones
     qDebug()  << "Stratege: Vehicle Removed: No " << vehicle->id();
     qDebug() << _mapVehicle2VehicleAttribut->remove(vehicle);
+}
+
+void Stratege::_zoneUpdate()
+{
+    qDebug() << "Stratege::_zoneUpdate";
 }
 
 void Stratege::_mtFiltering()

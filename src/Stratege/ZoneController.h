@@ -37,7 +37,7 @@ public:
     QmlObjectListModel* zonePolygons        (void) { return &_zonePolygons; }
 
 signals:
-    void updateZones();     //To connect with the Stratege
+    void updateZones();     //To connect with the Stratege. Only notifys the stratege that the zone has changed. The stratege will then access to the value through its private variable _zoneController
 
 private:
     QmlObjectListModel _zonePolygons;   //Stratege will use QGCMapPolygon instead of QmlObjectListModel

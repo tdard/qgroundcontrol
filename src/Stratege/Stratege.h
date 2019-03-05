@@ -11,12 +11,14 @@
 #include "QGeoCoordinate"
 #include "QTime"
 #include "QVector3D"
+//#include "QmlObjectListModel.h"
+#include "ZoneController.h"
 
 class FirmwarePluginManager;
 class QGCApplication;
 class MAVLinkProtocol;
 class Vehicle;
-
+//class ZoneController;
 
 //Competition time
 #define COMPETITION_TIME 60
@@ -121,6 +123,7 @@ public slots:
 private slots:
     void _addedVehicle(Vehicle* vehicle); //Modify dynamically the size of the member variables
     void _removedVehicle(Vehicle* vehicle);
+    void _zoneUpdate();
 
 private:
     void _mtFiltering();                                                                            //To modify: return list of QGeoGoordinates representing true enemy position. Return also speed indication-> not this type then ??
@@ -135,6 +138,8 @@ private:
 
     QMap<Vehicle*, VehicleAttribut*>* _mapVehicle2VehicleAttribut;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
     QMap<QGeoCoordinate, QVector3D>* _mapTargetsPositions2TargetsVelocities;
+
+    ZoneController* _zoneController;
 };
 
 
