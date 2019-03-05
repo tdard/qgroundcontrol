@@ -20,7 +20,7 @@ public:
     /// Should be called immediately upon Component.onCompleted.
     Q_INVOKABLE void start(bool flyView);
 
-//    Q_PROPERTY(QmlObjectListModel*  zonePolygons        READ zonePolygons                                   CONSTANT)
+    Q_PROPERTY(QmlObjectListModel*  zonePolygons        READ zonePolygons                                   CONSTANT)
 
     /// Adds a square area defining the boundaries of the challenge
     Q_INVOKABLE void addMainPolygonZone     (QGeoCoordinate center, int height = POLYGON_INFO_HEIGHT, int width = POLYGON_INFO_WIDTH);

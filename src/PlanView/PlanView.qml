@@ -574,6 +574,16 @@ QGCView {
                 planView:               true
             }
 
+            // GDP - Start
+            ZoneMapVisuals {
+                map:                    editorMap
+                myZoneController:       _zoneController
+                interactive:            _editingLayer = _layerZones
+                planView:               true
+            }
+
+            // GDP - Stop
+
             // Airspace overlap support
             MapItemView {
                 model:              _airspaceEnabled && QGroundControl.airspaceManager.airspaceVisible ? QGroundControl.airspaceManager.airspaces.circles : []

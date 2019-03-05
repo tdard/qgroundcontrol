@@ -83,3 +83,4 @@ VehicleRotationCal      1.0 VehicleRotationCal.qml
 VehicleSummaryRow       1.0 VehicleSummaryRow.qml
 ViewWidget              1.0 ViewWidget.qml
 ZoneEditor              1.0 ZoneEditor.qml
+ZoneMapVisuals          1.0 ZoneMapVisuals.qml
