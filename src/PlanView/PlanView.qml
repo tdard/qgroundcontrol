@@ -56,6 +56,9 @@ QGCView {
     property var    _geoFenceController:                _planMasterController.geoFenceController
     property var    _rallyPointController:              _planMasterController.rallyPointController
     property var    _visualItems:                       _missionController.visualItems
+    // GDP - Start
+    property var    _zoneController:                    masterZoneController
+    // GDP - Stop
     property bool   _lightWidgetBorders:                editorMap.isSatelliteMap
     property bool   _addWaypointOnClick:                false
     property bool   _addROIOnClick:                     false
@@ -275,6 +278,13 @@ QGCView {
             fileDialog.fileExtension =  _appSettings.kmlFileExtension
             fileDialog.fileExtension2 = ""
             fileDialog.openForSave()
+        }
+    }
+
+    ZoneController {
+        id: masterZoneController
+        Component.onCompleted: {
+            start(false /* flyView */)
         }
     }
 
@@ -513,7 +523,7 @@ QGCView {
                         myGeoFenceEditor.setMouseCoord(coordinate)
                         break
                     case _layerZones:
-                        myGeoFenceEditor.setMouseCoord(coordinate)
+                        zoneEditor.setMouseCoord(coordinate)
                     //GDP - Stop
                     }
                 }
@@ -920,7 +930,7 @@ QGCView {
                 anchors.bottom:         parent.bottom
                 anchors.left:           parent.left
                 anchors.right:          parent.right
-                myGeoFenceController:   _geoFenceController
+                myZoneController:       _zoneController
                 flightMap:              editorMap
                 visible:                _editingLayer == _layerZones
             }

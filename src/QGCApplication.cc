@@ -90,7 +90,9 @@
 #include "ShapeFileHelper.h"
 #include "QGCFileDownload.h"
 #include "FirmwareImage.h"
-
+// GDP - Start
+#include "ZoneController.h"
+// GDP - Stop
 #ifndef NO_SERIAL_LINK
 #include "SerialLink.h"
 #endif
@@ -449,6 +451,9 @@ void QGCApplication::_initCommon(void)
     qmlRegisterType<ESP8266ComponentController>     (kQGCControllers,                       1, 0, "ESP8266ComponentController");
     qmlRegisterType<ScreenToolsController>          (kQGCControllers,                       1, 0, "ScreenToolsController");
     qmlRegisterType<PlanMasterController>           (kQGCControllers,                       1, 0, "PlanMasterController");
+    // GDP - Start
+    qmlRegisterType<ZoneController>                 (kQGCControllers,                       1, 0, "ZoneController");
+    // GDP - Stop
     qmlRegisterType<ValuesWidgetController>         (kQGCControllers,                       1, 0, "ValuesWidgetController");
     qmlRegisterType<QGCFileDialogController>        (kQGCControllers,                       1, 0, "QGCFileDialogController");
     qmlRegisterType<RCChannelMonitorController>     (kQGCControllers,                       1, 0, "RCChannelMonitorController");

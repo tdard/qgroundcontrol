@@ -1,7 +1,7 @@
 #include "ZoneController.h"
 #include "QGCQGeoCoordinate.h"
 
-ZoneController::ZoneController(QObject* parent)
+ZoneController::ZoneController(QObject* parent) : QObject(parent)
 {
     _flyView = false;
     //Nothing to do
@@ -9,7 +9,7 @@ ZoneController::ZoneController(QObject* parent)
 
 void ZoneController::start(bool flyView)
 {
-
+    _flyView = flyView;
 }
 
 void ZoneController::addMainPolygonZone(QGeoCoordinate center, int height, int width)
