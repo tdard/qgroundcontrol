@@ -91,7 +91,7 @@ QGCFlickable {
                     GridLayout {
                         anchors.left:           parent.left
                         anchors.right:          parent.right
-                        rows:                   6
+                        rows:                   7
                         flow:                   GridLayout.TopToBottom
 
                         QGCTextField {
@@ -109,7 +109,7 @@ QGCFlickable {
                         }
 
                         QGCButton {
-                            id:                 buttonBuildFence
+                            id:                 buttonBuildMainZone
                             text:               qsTr("Build Polygon Zones")
                             Layout.row:         2
                             onClicked: {
@@ -128,21 +128,30 @@ QGCFlickable {
 
 
                         QGCButton {
-                            id:                 buttonRotateFence
+                            id:                 buttonRotateZone
                             text:               qsTr("Rotate")
                             Layout.row:         4
                             onClicked: {
                                 var rot = (textFieldRotation.text)? parseInt(textFieldRotation.text) : 0
                                 console.log(rot)
                                 myZoneController.rotateZones(0, rot)
-                            /*Should be done in GeoFenceMapVisuals ?*/
+                            }
+                        }
+
+                        QGCButton {
+                            id:                 buttonBuildDefenseZone
+                            text:               qsTr("Build defense zone")
+                            Layout.row:         5
+                            onClicked: {
+                                console.log("Build defense zone")
+                                myZoneController.addZonePolygonDefense()
                             }
                         }
 
                         QGCButton {
                             id:                 buttonDelete
                             text:               qsTr("Delete")
-                            Layout.row:         5
+                            Layout.row:         6
                             onClicked: {
                                 console.log("Delete")
                                 myZoneController.deleteAll()
