@@ -33,10 +33,10 @@ Item {
     property var    _zonePolygon:               myZoneController.zonePolygon
     property var    _zonePolygonDefense:        myZoneController.zonePolygonDefense
     property var    _zonePolygonAttack:         myZoneController.zonePolygonAttack
-    property color  _borderColor:               "orange"
+    property color  _borderColor:               "grey"
     property int    _borderWidthInclusion:      2
     property int    _borderWidthExclusion:      0
-    property color  _interiorColorExclusion:    "orange"
+    property color  _interiorColorExclusion:    "grey"
     property color  _interiorColorInclusion:    "transparent"
     property real   _interiorOpacityExclusion:  0.2
     property real   _interiorOpacityInclusion:  1
@@ -63,7 +63,7 @@ Item {
             mapPolygon:         object
             borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
             borderColor:        _borderColor
-            interiorColor:      "green" //object.inclusion ? _interiorColorInclusion : _interiorColorExclusion
+            interiorColor:      "green"
             interiorOpacity:    0.2
         }
     }
@@ -76,8 +76,8 @@ Item {
             mapPolygon:         object
             borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
             borderColor:        _borderColor
-            interiorColor:      "red" //object.inclusion ? _interiorColorInclusion : _interiorColorExclusion
-            interiorOpacity:    0.2
+            interiorColor:      "red"
+            interiorOpacity:    0.15
         }
     }
 

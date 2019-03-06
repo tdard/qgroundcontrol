@@ -13,7 +13,7 @@ QGCFlickable {
     id:             root
     contentHeight:  zoneEditorRect.height
     clip:           true
-
+    visible:        false
     property var    myZoneController
     property var    flightMap
 
@@ -91,7 +91,7 @@ QGCFlickable {
                     GridLayout {
                         anchors.left:           parent.left
                         anchors.right:          parent.right
-                        rows:                   8
+                        rows:                   7
                         flow:                   GridLayout.TopToBottom
 
                         QGCTextField {
@@ -138,29 +138,42 @@ QGCFlickable {
                             }
                         }
 
+//                        QGCButton {
+//                            id:                 buttonBuildDefenseZone
+//                            text:               qsTr("Build defense zones")
+//                            Layout.row:         5
+//                            onClicked: {
+//                                console.log("Build defense zones")
+//                                myZoneController.addZonePolygonDefense()
+//                            }
+//                        }
+//                        QGCButton {
+//                            id:                 buttonBuildAttackZone
+//                            text:               qsTr("Build attack zones")
+//                            Layout.row:         6
+//                            onClicked: {
+//                                console.log("Build attack zones")
+//                                myZoneController.addZonePolygonAttack()
+//                            }
+//                        }
+
                         QGCButton {
-                            id:                 buttonBuildDefenseZone
-                            text:               qsTr("Build defense zones")
+                            id:                 buttonBuildAttackAndDefense
+                            text:               qsTr("Build Attack & Defense zones")
                             Layout.row:         5
                             onClicked: {
-                                console.log("Build defense zones")
-                                myZoneController.addZonePolygonDefense()
-                            }
-                        }
-                        QGCButton {
-                            id:                 buttonBuildAttackZone
-                            text:               qsTr("Build attack zones")
-                            Layout.row:         6
-                            onClicked: {
-                                console.log("Build attack zones")
+                                console.log("Build Attack & Defense zones")
+                                myZoneController.clearAllInteractive()
                                 myZoneController.addZonePolygonAttack()
+                                myZoneController.addZonePolygonDefense()
+                                myZoneController.sendPolygonZone()
                             }
                         }
 
                         QGCButton {
                             id:                 buttonDelete
                             text:               qsTr("Delete")
-                            Layout.row:         7
+                            Layout.row:         6
                             onClicked: {
                                 console.log("Delete")
                                 myZoneController.deleteAll()

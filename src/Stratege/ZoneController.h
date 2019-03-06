@@ -37,7 +37,8 @@ public:
 
     /// Clears the interactive bit from all Zone items
     Q_INVOKABLE void clearAllInteractive        (void);
-    Q_INVOKABLE void deleteAll();
+    Q_INVOKABLE void deleteAll                  (void);
+    Q_INVOKABLE void sendPolygonZone            (void);
 
     QmlObjectListModel* zonePolygon             (void) { return &_zonePolygon; }
     QmlObjectListModel* zonePolygonDefense      (void) { return &_zonePolygonDefense; }

@@ -19,7 +19,7 @@ void ZoneController::start(Stratege* stratege, bool flyView)
     connect(this, &ZoneController::sendPolygonZoneToStratege, stratege, &Stratege::setPolygonZoneFromController);
     connect(stratege, &Stratege::sendPolygonToZoneController, this, &ZoneController::setZonePolygonFromStratege);
 
-    emit requestZonePolygonFromStratege();
+//    emit requestZonePolygonFromStratege();
 }
 
 void ZoneController::addMainPolygonZone(QGeoCoordinate center, int height, int width)
@@ -91,7 +91,6 @@ void ZoneController::addZonePolygonDefense(int numberInAltitude, int numberInHei
             _zonePolygonDefense.append(zonePolygonDefense);
         }
     }
-    clearAllInteractive();
 }
 
 
@@ -133,7 +132,6 @@ void ZoneController::addZonePolygonAttack(int numberInAltitude, int numberInHeig
             _zonePolygonAttack.append(zonePolygonAttack);
         }
     }
-    clearAllInteractive();
 }
 
 void ZoneController::rotateZones(int index, int rotation, int height, int width)
@@ -158,16 +156,43 @@ void ZoneController::rotateZones(int index, int rotation, int height, int width)
     zonePolygon->adjustVertex(1, topRight);
     zonePolygon->adjustVertex(2, bottomRight);
     zonePolygon->adjustVertex(3, bottomLeft);
-
-    clearAllInteractive();
 }
 
-void ZoneController::deleteAll()
+void ZoneController::deleteAll(void)
 {
     qDebug() << "deleteAll";
-    _zonePolygon.clearAndDeleteContents();
-    _zonePolygonDefense.clearAndDeleteContents();
-    _zonePolygonAttack.clearAndDeleteContents();
+//    _zonePolygon.clearAndDeleteContents();
+//    _zonePolygonDefense.clearAndDeleteContents();
+//    _zonePolygonAttack.clearAndDeleteContents();
+    _zonePolygon.clear();
+    _zonePolygonAttack.clear();
+    _zonePolygonDefense.clear();
+    sendPolygonZone();
+}
+
+void ZoneController::sendPolygonZone(void)
+{
+    qDebug() << "sendPolygonZoneToStratege";
+
+    QList<QGCMapPolygon*> zonePolygon = QList<QGCMapPolygon*>();
+    for (int i = 0; i < _zonePolygon.count(); ++i)
+    {
+        zonePolygon.append(_zonePolygon.value<QGCMapPolygon*>(i));
+    }
+
+    QList<QGCMapPolygon*> zonePolygonDefense = QList<QGCMapPolygon*>();
+    for (int i = 0; i < _zonePolygonDefense.count(); ++i)
+    {
+        zonePolygonDefense.append(_zonePolygonDefense.value<QGCMapPolygon*>(i));
+    }
+
+    QList<QGCMapPolygon*> zonePolygonAttack = QList<QGCMapPolygon*>();
+    for (int i = 0; i < _zonePolygonAttack.count(); ++i)
+    {
+        zonePolygonAttack.append(_zonePolygonAttack.value<QGCMapPolygon*>(i));
+    }
+
+    emit sendPolygonZoneToStratege(zonePolygon, zonePolygonDefense, zonePolygonAttack);
 }
 
 void ZoneController::clearAllInteractive(void)
@@ -179,15 +204,19 @@ void ZoneController::clearAllInteractive(void)
     for (int i=0; i<_zonePolygonDefense.count(); i++) {
         _zonePolygonDefense.value<QGCMapPolygon*>(i)->setInteractive(false);
     }
+    for (int i=0; i<_zonePolygonAttack.count(); i++) {
+        _zonePolygonAttack.value<QGCMapPolygon*>(i)->setInteractive(false);
+    }
 }
 
 void ZoneController::setZonePolygonFromStratege(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack)
 {
-    qDebug() << "setZonePolygonFromStratege";
+    qDebug() << "setZonePolygonFromStratege, flyView:" << _flyView;
+    if (_flyView == false) { return; }
 
-    _zonePolygon.clearAndDeleteContents();
-    _zonePolygonAttack.clearAndDeleteContents();
-    _zonePolygonDefense.clearAndDeleteContents();
+    _zonePolygon.clear();
+    _zonePolygonAttack.clear();
+    _zonePolygonDefense.clear();
 
     for (int i = 0; i < mainZonePolygon.count(); ++i)
     {

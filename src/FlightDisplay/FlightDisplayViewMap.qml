@@ -49,6 +49,10 @@ FlightMap {
     property var    _geoFenceController:        _planMasterController.geoFenceController
     property var    _rallyPointController:      _planMasterController.rallyPointController
     property var    _activeVehicle:             QGroundControl.multiVehicleManager.activeVehicle
+    // GDP - Start
+    readonly property var _stratege:            QGroundControl.stratege
+    property var    _zoneController:            masterZoneController
+    // GDP - Stop
     property var    _activeVehicleCoordinate:   _activeVehicle ? _activeVehicle.coordinate : QtPositioning.coordinate()
     property real   _toolButtonTopMargin:       parent.height - ScreenTools.availableHeight + (ScreenTools.defaultFontPixelHeight / 2)
     property bool   _airspaceEnabled:           QGroundControl.airmapSupported ? (QGroundControl.settingsManager.airMapSettings.enableAirMap.rawValue && QGroundControl.airspaceManager.connected): false
@@ -253,6 +257,22 @@ FlightMap {
             }
         }
     }
+    // GDP - Start
+    ZoneController {
+        id: masterZoneController
+
+        Component.onCompleted: {
+            start(_stratege, true /* flyView */)
+        }
+    }
+
+    ZoneMapVisuals {
+        map:                    flightMap
+        myZoneController:       _zoneController
+        interactive:            false
+        planView:               false
+    }
+    // GDP - Stop
 
     // Allow custom builds to add map items
     CustomMapItems {
