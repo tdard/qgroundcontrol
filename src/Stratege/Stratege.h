@@ -52,9 +52,10 @@ public:
       Vehicle* vehicle                      () { return _vehicle; }
       int role                              () { return _role; }
       QGeoCoordinate targetLonLatAltCoord   () { return _targetLonLatAltCoord; }
-      mavlink_servo_output_raw_t* mainServo              () { return _mainServo; }
-      mavlink_servo_output_raw_t* auxServo               () { return _auxServo; }
-
+      mavlink_servo_output_raw_t* mainServo () { return _mainServo; }
+      mavlink_servo_output_raw_t* auxServo  () { return _auxServo; }
+      QGCMapPolygon* defpatrolzone          () { return _defpatrolzone; }
+      QGCMapPolygon* attpatrolzone          () { return _attpatrolzone; }
 
 
 private:
@@ -66,6 +67,9 @@ private:
       //Servo Information, PPM Modulation
       mavlink_servo_output_raw_t* _mainServo;
       mavlink_servo_output_raw_t* _auxServo;
+
+      QGCMapPolygon* _defpatrolzone;
+      QGCMapPolygon* _attpatrolzone;
 };
 
 
@@ -97,6 +101,10 @@ private slots:
 private:
     void _mtFiltering();                                                                            //To modify: return list of QGeoGoordinates representing true enemy position. Return also speed indication-> not this type then ??
     void _taskControl();     //dictionnary associating position & speed for designated targets
+    void _patrol(Vehicle* vm);
+    void _track(Vehicle* vm);
+    void _replace(Vehicle* vm);
+    void _attack(Vehicle* vm);
     void _parse(mavlink_message_t message);
 
     //Member variables

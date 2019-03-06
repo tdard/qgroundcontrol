@@ -24,6 +24,8 @@ VehicleAttribut::VehicleAttribut(Vehicle* vehicle)
     _targetLonLatAltCoord = QGeoCoordinate();
     _mainServo = new mavlink_servo_output_raw_t;
     _auxServo = new mavlink_servo_output_raw_t;
+    _attpatrolzone = new QGCMapPolygon();
+    _defpatrolzone = new QGCMapPolygon();
 }
 
 
@@ -76,6 +78,19 @@ void Stratege::startMission()
     _startMission = true;
 }
 
+void Stratege::_attack(Vehicle* vm)
+{
+    qDebug() << "Attack started for vehicle : time: " << _time.toString();
+    QGeoCoordinate waypoint = _mapVehicle2VehicleAttribut->value(vm)->attpatrolzone()->center();
+    vm->guidedModeOrbit(waypoint, 10, waypoint.altitude());
+}
+
+void Stratege::_patrol(Vehicle* vm)
+{
+    qDebug() << "Patrol started for vehicle : time: " << _time.toString();
+    QGeoCoordinate waypoint = _mapVehicle2VehicleAttribut->value(vm)->defpatrolzone()->center();
+    vm->guidedModeOrbit(waypoint, 10, waypoint.altitude());
+}
 
 void Stratege::updateData(mavlink_message_t message)
 {
