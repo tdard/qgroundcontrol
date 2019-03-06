@@ -8,10 +8,18 @@ ZoneController::ZoneController(QObject* parent) : QObject(parent)
     //Nothing to do
 }
 
-void ZoneController::start(bool flyView)
+void ZoneController::start(Stratege* stratege, bool flyView)
 {
+    qDebug() << "ZoneController start";
+
     _flyView = flyView;
     _rotation = 0;
+
+    connect(this, &ZoneController::requestZonePolygonFromStratege, stratege, &Stratege::handleZoneControllerRequest);
+    connect(this, &ZoneController::sendPolygonZoneToStratege, stratege, &Stratege::setPolygonZoneFromController);
+    connect(stratege, &Stratege::sendPolygonToZoneController, this, &ZoneController::setZonePolygonFromStratege);
+
+    emit requestZonePolygonFromStratege();
 }
 
 void ZoneController::addMainPolygonZone(QGeoCoordinate center, int height, int width)
@@ -173,4 +181,27 @@ void ZoneController::clearAllInteractive(void)
     }
 }
 
+void ZoneController::setZonePolygonFromStratege(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack)
+{
+    qDebug() << "setZonePolygonFromStratege";
+
+    _zonePolygon.clearAndDeleteContents();
+    _zonePolygonAttack.clearAndDeleteContents();
+    _zonePolygonDefense.clearAndDeleteContents();
+
+    for (int i = 0; i < mainZonePolygon.count(); ++i)
+    {
+        _zonePolygon.append(mainZonePolygon.at(i));
+    }
+
+    for (int i = 0; i < zonePolygonDefense.count(); ++i)
+    {
+        _zonePolygonDefense.append(zonePolygonDefense.at(i));
+    }
+
+    for (int i = 0; i < zonePolygonAttack.count(); ++i)
+    {
+        _zonePolygonAttack.append(zonePolygonAttack.at(i));
+    }
+}
 

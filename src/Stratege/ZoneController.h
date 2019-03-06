@@ -5,6 +5,7 @@
 
 #include "QGCFencePolygon.h"
 #include "QGCFenceCircle.h"
+#include "Stratege.h"
 
 #define MAX_ALTITUDE            120
 #define POLYGON_INFO_WIDTH      100
@@ -21,7 +22,7 @@ public:
     ZoneController(QObject* parent = NULL);
 
     /// Should be called immediately upon Component.onCompleted.
-    Q_INVOKABLE void start(bool flyView);
+    Q_INVOKABLE void start(Stratege* stratege, bool flyView);
 
     Q_PROPERTY(QmlObjectListModel*  zonePolygon                 READ zonePolygon                                        CONSTANT)
     Q_PROPERTY(QmlObjectListModel*  zonePolygonDefense          READ zonePolygonDefense                                 CONSTANT)
@@ -41,8 +42,13 @@ public:
     QmlObjectListModel* zonePolygon             (void) { return &_zonePolygon; }
     QmlObjectListModel* zonePolygonDefense      (void) { return &_zonePolygonDefense; }
     QmlObjectListModel* zonePolygonAttack       (void) { return &_zonePolygonAttack; }
+
 signals:
-    void updateZones();     //To connect with the Stratege. Only notifys the stratege that the zone has changed. The stratege will then access to the value through its private variable _zoneController
+    void requestZonePolygonFromStratege();
+    void sendPolygonZoneToStratege(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack);
+
+private slots:
+    void setZonePolygonFromStratege(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack);
 
 private:
     QmlObjectListModel          _zonePolygon;   //Stratege will use QGCMapPolygon instead of QmlObjectListModel
@@ -50,7 +56,6 @@ private:
     QmlObjectListModel          _zonePolygonAttack;
     bool                        _flyView;
     int                         _rotation;
-
 
 };
 

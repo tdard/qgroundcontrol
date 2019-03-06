@@ -29,6 +29,10 @@
 class TaisyncManager;
 #endif
 
+// GDP - Start
+#include "Stratege.h"
+// GDP - Stop
+
 #ifdef QT_DEBUG
 #include "MockLink.h"
 #endif
@@ -56,6 +60,9 @@ public:
 
     Q_PROPERTY(LinkManager*         linkManager         READ linkManager            CONSTANT)
     Q_PROPERTY(MultiVehicleManager* multiVehicleManager READ multiVehicleManager    CONSTANT)
+    // GDP - Start
+    Q_PROPERTY(Stratege*            stratege            READ stratege               CONSTANT)
+    // GDP - Stop
     Q_PROPERTY(QGCMapEngineManager* mapEngineManager    READ mapEngineManager       CONSTANT)
     Q_PROPERTY(QGCPositionManager*  qgcPositionManger   READ qgcPositionManger      CONSTANT)
     Q_PROPERTY(MissionCommandTree*  missionCommandTree  READ missionCommandTree     CONSTANT)
@@ -149,6 +156,9 @@ public:
     QString                 appName             ()  { return qgcApp()->applicationName(); }
     LinkManager*            linkManager         ()  { return _linkManager; }
     MultiVehicleManager*    multiVehicleManager ()  { return _multiVehicleManager; }
+    // GDP - Start
+    Stratege *              stratege            ()  { return _stratege; }
+    // GDP - Stop
     QGCMapEngineManager*    mapEngineManager    ()  { return _mapEngineManager; }
     QGCPositionManager*     qgcPositionManger   ()  { return _qgcPositionManager; }
     MissionCommandTree*     missionCommandTree  ()  { return _missionCommandTree; }
@@ -215,6 +225,9 @@ private:
     double                  _flightMapInitialZoom   = 17.0;
     LinkManager*            _linkManager            = nullptr;
     MultiVehicleManager*    _multiVehicleManager    = nullptr;
+    // GDP - Start
+    Stratege*               _stratege               = nullptr;
+    // GDP - Stop
     QGCMapEngineManager*    _mapEngineManager       = nullptr;
     QGCPositionManager*     _qgcPositionManager     = nullptr;
     MissionCommandTree*     _missionCommandTree     = nullptr;

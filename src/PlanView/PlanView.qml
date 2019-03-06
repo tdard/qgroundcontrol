@@ -45,6 +45,9 @@ QGCView {
     readonly property real  _margin:                    ScreenTools.defaultFontPixelHeight * 0.5
     readonly property real  _radius:                    ScreenTools.defaultFontPixelWidth  * 0.5
     readonly property var   _activeVehicle:             QGroundControl.multiVehicleManager.activeVehicle
+    // GDP - Start
+    readonly property var   _stratege:                  QGroundControl.stratege
+    // GDP - Stop
     readonly property real  _rightPanelWidth:           Math.min(parent.width / 2, ScreenTools.defaultFontPixelWidth * 45)
     readonly property real  _toolButtonTopMargin:       parent.height - ScreenTools.availableHeight + (ScreenTools.defaultFontPixelHeight / 2)
     readonly property var   _defaultVehicleCoordinate:  QtPositioning.coordinate(37.803784, -122.462276)
@@ -283,8 +286,9 @@ QGCView {
 
     ZoneController {
         id: masterZoneController
+
         Component.onCompleted: {
-            start(false /* flyView */)
+            start(_stratege, false /* flyView */)
         }
     }
 

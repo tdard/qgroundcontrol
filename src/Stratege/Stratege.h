@@ -11,14 +11,12 @@
 #include "QGeoCoordinate"
 #include "QTime"
 #include "QVector3D"
-//#include "QmlObjectListModel.h"
-#include "ZoneController.h"
+#include "QGCMapPolygon.h"
 
 class FirmwarePluginManager;
 class QGCApplication;
 class MAVLinkProtocol;
 class Vehicle;
-//class ZoneController;
 
 //Competition time
 #define COMPETITION_TIME 60
@@ -87,43 +85,20 @@ public:
 
     virtual void setToolbox(QGCToolbox* toolbox);
 
-    //TODO: correctly initialize the coordinates describing the area of interest
-
-    //Geofence Information                                                                          //To modify: set the real coordinates for the competition. Hypothesis: zones are rectangles
-
-//    //Area of interest: DEFENSE + NEUTRAL + ATTACK
-//    static const QGeoCoordinate globalTopLeft = QGeoCoordinate();                                   //Hint: to access to these variables, use Stratege::globalTopLeft
-//    static const QGeoCoordinate globalTopRight = QGeoCoordinate();
-//    static const QGeoCoordinate globalBottomLeft = QGeoCoordinate();
-//    static const QGeoCoordinate globalBottomRight = QGeoCoordinate();
-
-//    //Defense zone coordinates
-//    static const QGeoCoordinate defenseTopLeft = QGeoCoordinate();
-//    static const QGeoCoordinate defenseTopRight = QGeoCoordinate();
-//    static const QGeoCoordinate defenseBottomLeft = QGeoCoordinate();
-//    static const QGeoCoordinate defenseBottomRight = QGeoCoordinate();
-
-//    //Attack zone coordinates
-//    static const QGeoCoordinate attackTopLeft = QGeoCoordinate();
-//    static const QGeoCoordinate attackTopRight = QGeoCoordinate();
-//    static const QGeoCoordinate attackBottomLeft = QGeoCoordinate();
-//    static const QGeoCoordinate attackBottomRight = QGeoCoordinate();
-
-//    //Neutral zone coordinates
-//    static const QGeoCoordinate neutralTopLeft = QGeoCoordinate();
-//    static const QGeoCoordinate neutralTopRight = QGeoCoordinate();
-//    static const QGeoCoordinate neutralBottomLeft = QGeoCoordinate();
-//    static const QGeoCoordinate neutralBottomRight = QGeoCoordinate();
+signals:
+    void sendPolygonToZoneController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack);
 
 public slots:
     void abortMission();
     void startMission();
     void updateData(mavlink_message_t message);
+    void setPolygonZoneFromController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack);
+    void handleZoneControllerRequest();
 
 private slots:
     void _addedVehicle(Vehicle* vehicle); //Modify dynamically the size of the member variables
     void _removedVehicle(Vehicle* vehicle);
-    void _zoneUpdate();
+
 
 private:
     void _mtFiltering();                                                                            //To modify: return list of QGeoGoordinates representing true enemy position. Return also speed indication-> not this type then ??
@@ -135,11 +110,12 @@ private:
     bool _startMission;
 
     QTime _time;
-
     QMap<Vehicle*, VehicleAttribut*>* _mapVehicle2VehicleAttribut;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
     QMap<QGeoCoordinate, QVector3D>* _mapTargetsPositions2TargetsVelocities;
+    QList<QGCMapPolygon*> _mainZonePolygon;
+    QList<QGCMapPolygon*> _zonePolygonDefense;
+    QList<QGCMapPolygon*> _zonePolygonAttack;
 
-    ZoneController* _zoneController;
 };
 
 

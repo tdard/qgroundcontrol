@@ -36,7 +36,10 @@ Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolb
     _time.start();
     _mapVehicle2VehicleAttribut = new QMap<Vehicle*, VehicleAttribut*>();
     _mapTargetsPositions2TargetsVelocities = new QMap<QGeoCoordinate, QVector3D>();
-    _zoneController = new ZoneController();
+
+    _mainZonePolygon = QList<QGCMapPolygon*>();
+    _zonePolygonAttack = QList<QGCMapPolygon*>();
+    _zonePolygonDefense = QList<QGCMapPolygon*>();
 }
 
 void Stratege::setToolbox(QGCToolbox *toolbox)
@@ -44,7 +47,6 @@ void Stratege::setToolbox(QGCToolbox *toolbox)
     QGCTool::setToolbox(toolbox);
     connect(toolbox->multiVehicleManager(), &MultiVehicleManager::vehicleAdded, this, &Stratege::_addedVehicle);
     connect(toolbox->multiVehicleManager(), &MultiVehicleManager::vehicleRemoved, this, &Stratege::_removedVehicle);
-    connect(_zoneController, &ZoneController::updateZones, this, &Stratege::_zoneUpdate);
 }
 
 void Stratege::abortMission()
@@ -120,10 +122,22 @@ void Stratege::_removedVehicle(Vehicle* vehicle)
     qDebug() << _mapVehicle2VehicleAttribut->remove(vehicle);
 }
 
-void Stratege::_zoneUpdate()
+void Stratege::setPolygonZoneFromController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack)
 {
-    qDebug() << "Stratege::_zoneUpdate";
+    qDebug() << "setPolygonZoneFromController";
+    _mainZonePolygon = mainZonePolygon;
+    _zonePolygonDefense = zonePolygonDefense;
+    _zonePolygonAttack = zonePolygonAttack;
+
+    emit sendPolygonToZoneController(mainZonePolygon, zonePolygonDefense, zonePolygonAttack);
 }
+
+void Stratege::handleZoneControllerRequest()
+{
+    qDebug() << "handleZoneControllerRequest";
+    emit sendPolygonToZoneController(_mainZonePolygon, _zonePolygonDefense, _zonePolygonAttack);
+}
+
 
 void Stratege::_mtFiltering()
 {
