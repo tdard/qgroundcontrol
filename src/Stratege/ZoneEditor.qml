@@ -91,7 +91,7 @@ QGCFlickable {
                     GridLayout {
                         anchors.left:           parent.left
                         anchors.right:          parent.right
-                        rows:                   7
+                        rows:                   8
                         flow:                   GridLayout.TopToBottom
 
                         QGCTextField {
@@ -140,18 +140,27 @@ QGCFlickable {
 
                         QGCButton {
                             id:                 buttonBuildDefenseZone
-                            text:               qsTr("Build defense zone")
+                            text:               qsTr("Build defense zones")
                             Layout.row:         5
                             onClicked: {
-                                console.log("Build defense zone")
+                                console.log("Build defense zones")
                                 myZoneController.addZonePolygonDefense()
+                            }
+                        }
+                        QGCButton {
+                            id:                 buttonBuildAttackZone
+                            text:               qsTr("Build attack zones")
+                            Layout.row:         6
+                            onClicked: {
+                                console.log("Build attack zones")
+                                myZoneController.addZonePolygonAttack()
                             }
                         }
 
                         QGCButton {
                             id:                 buttonDelete
                             text:               qsTr("Delete")
-                            Layout.row:         6
+                            Layout.row:         7
                             onClicked: {
                                 console.log("Delete")
                                 myZoneController.deleteAll()

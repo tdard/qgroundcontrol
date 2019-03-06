@@ -30,7 +30,7 @@ public:
     /// Adds a square area defining the boundaries of the challenge
     Q_INVOKABLE void addMainPolygonZone         (QGeoCoordinate center, int height = POLYGON_INFO_HEIGHT, int width = POLYGON_INFO_WIDTH);
     Q_INVOKABLE void addZonePolygonDefense      (int numberInAltitude = 3, int numberInHeight = 2); // create 6 zones of defense (default)
-    Q_INVOKABLE void addAttackPolygonZone       (int numberInAltitude = 4, int numberInHeight = 2); // create 8 zones of attack (default)
+    Q_INVOKABLE void addZonePolygonAttack       (int numberInAltitude = 4, int numberInHeight = 2); // create 8 zones of attack (default)
     /// Rotate all the zones that are present on the map
     Q_INVOKABLE void rotateZones                (int index, int rotation, int height = POLYGON_INFO_HEIGHT, int width = POLYGON_INFO_WIDTH);
 

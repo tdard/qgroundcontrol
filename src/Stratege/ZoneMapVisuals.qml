@@ -32,6 +32,7 @@ Item {
     property var    _paramCircleFenceComponent
     property var    _zonePolygon:               myZoneController.zonePolygon
     property var    _zonePolygonDefense:        myZoneController.zonePolygonDefense
+    property var    _zonePolygonAttack:         myZoneController.zonePolygonAttack
     property color  _borderColor:               "orange"
     property int    _borderWidthInclusion:      2
     property int    _borderWidthExclusion:      0
@@ -63,6 +64,19 @@ Item {
             borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
             borderColor:        _borderColor
             interiorColor:      "green" //object.inclusion ? _interiorColorInclusion : _interiorColorExclusion
+            interiorOpacity:    0.2
+        }
+    }
+
+    Instantiator {
+        model: _zonePolygonAttack
+
+        delegate : QGCMapPolygonVisuals {
+            mapControl:         map
+            mapPolygon:         object
+            borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
+            borderColor:        _borderColor
+            interiorColor:      "red" //object.inclusion ? _interiorColorInclusion : _interiorColorExclusion
             interiorOpacity:    0.2
         }
     }
