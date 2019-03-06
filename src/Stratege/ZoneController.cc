@@ -2,10 +2,10 @@
 #include "QGCQGeoCoordinate.h"
 #include <QtMath>
 #include "QGCGeo.h"
+
 ZoneController::ZoneController(QObject* parent) : QObject(parent)
 {
     _flyView = false;
-    //Nothing to do
 }
 
 void ZoneController::start(Stratege* stratege, bool flyView)
@@ -18,8 +18,6 @@ void ZoneController::start(Stratege* stratege, bool flyView)
     connect(this, &ZoneController::requestZonePolygonFromStratege, stratege, &Stratege::handleZoneControllerRequest);
     connect(this, &ZoneController::sendPolygonZoneToStratege, stratege, &Stratege::setPolygonZoneFromController);
     connect(stratege, &Stratege::sendPolygonToZoneController, this, &ZoneController::setZonePolygonFromStratege);
-
-//    emit requestZonePolygonFromStratege();
 }
 
 void ZoneController::addMainPolygonZone(QGeoCoordinate center, int height, int width)
@@ -161,9 +159,6 @@ void ZoneController::rotateZones(int index, int rotation, int height, int width)
 void ZoneController::deleteAll(void)
 {
     qDebug() << "deleteAll";
-//    _zonePolygon.clearAndDeleteContents();
-//    _zonePolygonDefense.clearAndDeleteContents();
-//    _zonePolygonAttack.clearAndDeleteContents();
     _zonePolygon.clear();
     _zonePolygonAttack.clear();
     _zonePolygonDefense.clear();

@@ -49,14 +49,9 @@ public:
       VehicleAttribut(Vehicle*);
 
       void setRole(int role) { _role = role; }
-//      void setTargetLonLatAltCoord(int32_t lat, int32_t lon, float alt);
-//      void setMainServo(int16_t servo1_raw = 0, int16_t servo2_raw = 0, int16_t servo3_raw = 0, int16_t servo4_raw = 0, int16_t servo5_raw = 0, int16_t servo6_raw = 0, int16_t servo7_raw = 0, int16_t servo8_raw = 0);      // Implementation in Stratege.cc
-//      void setAuxServo(int16_t servo1_raw = 0, int16_t servo2_raw = 0, int16_t servo3_raw = 0, int16_t servo4_raw = 0, int16_t servo5_raw = 0, int16_t servo6_raw = 0, int16_t servo7_raw = 0, int16_t servo8_raw = 0);       // Implementation in Stratege.cc
-
       Vehicle* vehicle                      () { return _vehicle; }
       int role                              () { return _role; }
       QGeoCoordinate targetLonLatAltCoord   () { return _targetLonLatAltCoord; }
-      //float targetVelocity[3]               () { return _targetVelocity; }
       mavlink_servo_output_raw_t* mainServo              () { return _mainServo; }
       mavlink_servo_output_raw_t* auxServo               () { return _auxServo; }
 
@@ -67,7 +62,6 @@ private:
       int _role;
       //Information on the last enemy spotted by this vehicle
       QGeoCoordinate _targetLonLatAltCoord;
-      //float _targetVelocity[3];
 
       //Servo Information, PPM Modulation
       mavlink_servo_output_raw_t* _mainServo;
@@ -104,11 +98,10 @@ private:
     void _mtFiltering();                                                                            //To modify: return list of QGeoGoordinates representing true enemy position. Return also speed indication-> not this type then ??
     void _taskControl();     //dictionnary associating position & speed for designated targets
     void _parse(mavlink_message_t message);
-    //Member variables
 
+    //Member variables
     bool _abortMission;
     bool _startMission;
-
     QTime _time;
     QMap<Vehicle*, VehicleAttribut*>* _mapVehicle2VehicleAttribut;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
     QMap<QGeoCoordinate, QVector3D>* _mapTargetsPositions2TargetsVelocities;

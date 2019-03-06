@@ -63,7 +63,7 @@ Item {
             mapPolygon:         object
             borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
             borderColor:        _borderColor
-            interiorColor:      "green"
+            interiorColor:      "blue"
             interiorOpacity:    0.2
         }
     }
