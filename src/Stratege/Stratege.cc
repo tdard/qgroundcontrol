@@ -81,15 +81,25 @@ void Stratege::startMission()
 void Stratege::_attack(Vehicle* vm)
 {
     qDebug() << "Attack started for vehicle : time: " << _time.toString();
-    QGeoCoordinate waypoint = _mapVehicle2VehicleAttribut->value(vm)->attpatrolzone()->center();
-    vm->guidedModeOrbit(waypoint, 10, waypoint.altitude());
+    QGeoCoordinate waypoint = _zonePolygonAttack.first()->center();
+    double alt = vm->coordinate().altitude();
+    vm->guidedModeOrbit(waypoint, 10, alt);
 }
 
 void Stratege::_patrol(Vehicle* vm)
 {
     qDebug() << "Patrol started for vehicle : time: " << _time.toString();
-    QGeoCoordinate waypoint = _mapVehicle2VehicleAttribut->value(vm)->defpatrolzone()->center();
-    vm->guidedModeOrbit(waypoint, 10, waypoint.altitude());
+    //verify if inferiour layers are full -> change the altitude
+    QGeoCoordinate waypoint = _zonePolygonDefense.first()->center();
+    double alt = vm->coordinate().altitude();
+    vm->guidedModeOrbit(waypoint, 10, alt);
+
+    //head towards the enemy drone that is at the same altitude
+    /*double rel_alt = vm->coordinate().altitude() - vm->homePosition().altitude();
+    double nmy_alt = _mapVehicle2VehicleAttribut->value(vm)->targetLonLatAltCoord().altitude();
+    if (nmy_alt < rel_alt+20 || nmy_alt > rel_alt-20)
+    {    }*/
+
 }
 
 void Stratege::updateData(mavlink_message_t message)
@@ -100,6 +110,13 @@ void Stratege::updateData(mavlink_message_t message)
     if (_startMission == true)
     {
         //Stop State ~ Start
+        //attack test
+        Vehicle* vm = _mapVehicle2VehicleAttribut->keys().first();
+        if (vm->altitudeRelative()->rawValue() > 5)
+        {
+            _attack(vm);
+        }
+
         if (_time.secsTo(QTime::currentTime()) == COMPETITION_TIME)
         {
             _startMission = false;
