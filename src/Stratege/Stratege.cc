@@ -24,8 +24,10 @@ VehicleAttribut::VehicleAttribut(Vehicle* vehicle)
     _targetLonLatAltCoord = QGeoCoordinate();
     _mainServo = new mavlink_servo_output_raw_t;
     _auxServo = new mavlink_servo_output_raw_t;
-    _attpatrolzone = new QGCMapPolygon();
-    _defpatrolzone = new QGCMapPolygon();
+    _attpatroliter = 0;
+    _defpatroliter = 0;
+    _inpatrol = false;
+    _inattack = false;
 }
 
 
@@ -59,6 +61,8 @@ void Stratege::abortMission()
     for(auto vm : _mapVehicle2VehicleAttribut->keys())
     {
         vm->firmwarePlugin()->guidedModeLand(vm);
+        _mapVehicle2VehicleAttribut->value(vm)->_inpatrol = false;
+        _mapVehicle2VehicleAttribut->value(vm)->_inattack = false;
     }
     qDebug() << "Abortion of mission finished";
     qDebug() << "Current time: " << QTime::currentTime().toString();
@@ -70,29 +74,78 @@ void Stratege::startMission()
 {
     _time.restart();
     qDebug() << "Mission Started: time: " << _time.toString();
-
+    int attiter = 0;
+    int defiter = 0;
     for(auto vm : _mapVehicle2VehicleAttribut->keys())
     {
+
+        //Filling of the attack zones
+        _mapVehicle2VehicleAttribut->value(vm)->_attpatroliter = attiter;
+        qDebug() << "Vehicle :" << vm->id() << " | attack zone : " << attiter+1;
+        attiter ++;
+
+        //Filling of the defense zones
+        if(vm->vehicleType() == MAV_TYPE_HEXAROTOR)
+        {
+            _mapVehicle2VehicleAttribut->value(vm)->_defpatroliter = defiter;
+            qDebug() << "Vehicle :" << vm->id() << " | defense zone : " << defiter+1;
+            defiter ++;
+        }
+
+        //Take off command
         vm->firmwarePlugin()->guidedModeTakeoff(vm, 15);
+        qDebug() << "Mission started for vehicle :" << vm->id() << " | time: " << _time.secsTo(QTime::currentTime());
     }
     _startMission = true;
 }
 
 void Stratege::_attack(Vehicle* vm)
 {
-    qDebug() << "Attack started for vehicle : time: " << _time.toString();
-    QGeoCoordinate waypoint = _zonePolygonAttack.first()->center();
-    double alt = vm->coordinate().altitude();
-    vm->guidedModeOrbit(waypoint, 10, alt);
+    //Attack command
+    _mapVehicle2VehicleAttribut->value(vm)->_inpatrol = false;
+    if(!_mapVehicle2VehicleAttribut->value(vm)->_inattack)
+    {
+        QGeoCoordinate waypoint = _zonePolygonAttack[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center();
+        double alt = vm->homePosition().altitude() + waypoint.altitude();
+        vm->guidedModeOrbit(waypoint, 10, alt);
+        _mapVehicle2VehicleAttribut->value(vm)->_inattack = true;
+        qDebug() << "Attack started for vehicle :" << vm->id() << " | time: " << _time.secsTo(QTime::currentTime());
+    }
+
+//    //Back to attack if outside of the zone
+//    if(_mapVehicle2VehicleAttribut->value(vm)->_inattack && !_zonePolygonAttack[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->containsCoordinate(vm->coordinate()))
+//    {
+//        QGeoCoordinate waypoint = _zonePolygonAttack[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center();
+//        double alt = vm->homePosition().altitude() + waypoint.altitude();
+//        vm->guidedModeOrbit(waypoint, 10, alt);
+//        _mapVehicle2VehicleAttribut->value(vm)->_inattack = true;
+//        qDebug() << "Vehicle: " << vm->id() << " out of attack zone : return to attack mode | time: " << _time.secsTo(QTime::currentTime());
+//    }
 }
 
 void Stratege::_patrol(Vehicle* vm)
 {
-    qDebug() << "Patrol started for vehicle : time: " << _time.toString();
-    //verify if inferiour layers are full -> change the altitude
-    QGeoCoordinate waypoint = _zonePolygonDefense.first()->center();
-    double alt = vm->coordinate().altitude();
-    vm->guidedModeOrbit(waypoint, 10, alt);
+    //Patrol command
+    _mapVehicle2VehicleAttribut->value(vm)->_inattack = false;
+    if(!_mapVehicle2VehicleAttribut->value(vm)->_inpatrol)
+    {
+        //verify if inferiour layers are full -> change the altitude
+        QGeoCoordinate waypoint = _zonePolygonDefense[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center();
+        double alt = vm->homePosition().altitude() + waypoint.altitude();
+        vm->guidedModeOrbit(waypoint, 10, alt);
+        _mapVehicle2VehicleAttribut->value(vm)->_inpatrol = true;
+        qDebug() << "Patrol started for vehicle :" << vm->id() << " | time: " << _time.secsTo(QTime::currentTime());
+    }
+
+//    //Back to attack if outside of the zone
+//    if(_mapVehicle2VehicleAttribut->value(vm)->_inpatrol && !_zonePolygonDefense[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->containsCoordinate(vm->coordinate()))
+//    {
+//        QGeoCoordinate waypoint = _zonePolygonDefense[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center();
+//        double alt = vm->homePosition().altitude() + waypoint.altitude();
+//        vm->guidedModeOrbit(waypoint, 10, alt);
+//        _mapVehicle2VehicleAttribut->value(vm)->_inpatrol = true;
+//        qDebug() << "Vehicle: " << vm->id() << " out of patrol zone : return to patrol mode | time: " << _time.secsTo(QTime::currentTime());
+//    }
 
     //head towards the enemy drone that is at the same altitude
     /*double rel_alt = vm->coordinate().altitude() - vm->homePosition().altitude();
@@ -105,35 +158,38 @@ void Stratege::_patrol(Vehicle* vm)
 void Stratege::updateData(mavlink_message_t message)
 {
     _parse(message);
-    _mtFiltering();
 
     if (_startMission == true)
     {
         //Stop State ~ Start
-        //attack test
-        Vehicle* vm = _mapVehicle2VehicleAttribut->keys().first();
-        if (vm->altitudeRelative()->rawValue() > 5)
+
+        for(auto vm : _mapVehicle2VehicleAttribut->keys())
         {
-            _attack(vm);
+            switch (vm->vehicleType()){
+            case MAV_TYPE_HEXAROTOR:{
+                if (vm->altitudeRelative()->rawValue() > 5 && _time.secsTo(QTime::currentTime()) < 30) { _patrol(vm); }
+                if (_time.secsTo(QTime::currentTime()) >= 30) { _attack(vm); }
+                break;
+            }
+            case MAV_TYPE_QUADROTOR:{
+                if (_time.secsTo(QTime::currentTime()) >= 15) { _attack(vm); }
+                break;
+            }}
         }
 
-        if (_time.secsTo(QTime::currentTime()) == COMPETITION_TIME)
+        if (_time.secsTo(QTime::currentTime()) >= 90)
         {
             _startMission = false;
             for(auto vm : _mapVehicle2VehicleAttribut->keys())
             {
-                if (vm->vehicleType() != MAV_TYPE_GROUND_ROVER){ vm->firmwarePlugin()->guidedModeLand(vm); }
+                if (vm->vehicleType() != MAV_TYPE_GROUND_ROVER)
+                {
+                    vm->firmwarePlugin()->guidedModeLand(vm);
+                    qDebug() << "End of the timer | Land started for vehicle :" << vm << " | time: " << _time.secsTo(QTime::currentTime());
+                }
             }
         }
         //Stop State ~ Stop
-
-        //Test: get main information ~ Start
-        qDebug() << "Relative Altitude to home position: " << _mapVehicle2VehicleAttribut->keys().first()->coordinate().altitude() - _mapVehicle2VehicleAttribut->keys().first()->homePosition().altitude();   //relative altitude, negligate terrain altitude variation. Is home set at right position everytime ?
-        qDebug() << "Latitude: " << _mapVehicle2VehicleAttribut->keys().first()->coordinate().latitude();
-        qDebug() << "Longitude: " << _mapVehicle2VehicleAttribut->keys().first()->coordinate().longitude();
-        qDebug() << "Heading: " << _mapVehicle2VehicleAttribut->keys().first()->heading()->rawValue().toDouble();       // Clockwise: 0->360. CounterClockWise: 360->0
-        qDebug() << "UAV Type: " << _mapVehicle2VehicleAttribut->first()->role();
-        //Test ~ Stop
     }
 }
 
@@ -142,7 +198,7 @@ void Stratege::_addedVehicle(Vehicle* vehicle)
 {
     //TODO
 //    Modify List of unoccupied zones
-    qDebug()  << "Stratege: Vehicle Added: No " << vehicle->id();
+    qDebug()  << "Stratege: Vehicle Added: No " << vehicle->id() << " | Type: " << vehicle->vehicleType();
     _mapVehicle2VehicleAttribut->insert(vehicle, new VehicleAttribut(vehicle));
 }
 
@@ -170,17 +226,10 @@ void Stratege::handleZoneControllerRequest()
     emit sendPolygonToZoneController(_mainZonePolygon, _zonePolygonDefense, _zonePolygonAttack);
 }
 
-
-void Stratege::_mtFiltering()
-{
-    //TODO
-    // Update Targets information: _mapTargetsPositions2TargetsVelocities
-}
-
-void Stratege::_taskControl()
-{
-    //TODO
-}
+//void Stratege::_taskControl()
+//{
+//    //TODO
+//}
 
 void Stratege::_parse(mavlink_message_t message)    //To modify, does not work as expected. Or, check in Vehicle.cc
 {

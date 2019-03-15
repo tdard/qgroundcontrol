@@ -53,10 +53,12 @@ public:
       int role                              () { return _role; }
       QGeoCoordinate targetLonLatAltCoord   () { return _targetLonLatAltCoord; }
       mavlink_servo_output_raw_t* mainServo () { return _mainServo; }
-      mavlink_servo_output_raw_t* auxServo  () { return _auxServo; }
-      QGCMapPolygon* defpatrolzone          () { return _defpatrolzone; }
-      QGCMapPolygon* attpatrolzone          () { return _attpatrolzone; }
+      mavlink_servo_output_raw_t* auxServo  () { return _auxServo; }  
 
+      int _defpatroliter;
+      int _attpatroliter;
+      bool  _inpatrol;
+      bool  _inattack;
 
 private:
       Vehicle* _vehicle;
@@ -68,8 +70,6 @@ private:
       mavlink_servo_output_raw_t* _mainServo;
       mavlink_servo_output_raw_t* _auxServo;
 
-      QGCMapPolygon* _defpatrolzone;
-      QGCMapPolygon* _attpatrolzone;
 };
 
 
@@ -96,20 +96,17 @@ public slots:
 private slots:
     void _addedVehicle(Vehicle* vehicle); //Modify dynamically the size of the member variables
     void _removedVehicle(Vehicle* vehicle);
-
+    //void _taskControl(bool activeMission);     //dictionnary associating position & speed for designated targets
 
 private:
-    void _mtFiltering();                                                                            //To modify: return list of QGeoGoordinates representing true enemy position. Return also speed indication-> not this type then ??
-    void _taskControl();     //dictionnary associating position & speed for designated targets
     void _patrol(Vehicle* vm);
-    void _track(Vehicle* vm);
-    void _replace(Vehicle* vm);
     void _attack(Vehicle* vm);
     void _parse(mavlink_message_t message);
 
     //Member variables
     bool _abortMission;
     bool _startMission;
+    //bool _activeMission;
     QTime _time;
     QMap<Vehicle*, VehicleAttribut*>* _mapVehicle2VehicleAttribut;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
     QMap<QGeoCoordinate, QVector3D>* _mapTargetsPositions2TargetsVelocities;
