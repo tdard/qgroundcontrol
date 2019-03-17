@@ -34,16 +34,22 @@ VehicleAttribut::VehicleAttribut(Vehicle* vehicle)
 
 Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolbox)
 {
-    _abortMission = false;
-    _startMission = false;
-    _time = QTime();
+    _abortMission                           =       false;
+    _startMission                           =       false;
+    _time                                   =       QTime();
     _time.start();
-    _mapVehicle2VehicleAttribut = new QMap<Vehicle*, VehicleAttribut*>();
-    _mapTargetsPositions2TargetsVelocities = new QMap<QGeoCoordinate, QVector3D>();
+    _mapVehicle2VehicleAttribut             =       new QMap<Vehicle*, VehicleAttribut*>();
+    _mapTargetsPositions2TargetsVelocities  =       new QMap<QGeoCoordinate, QVector3D>();
 
-    _mainZonePolygon = QList<QGCMapPolygon*>();
-    _zonePolygonAttack = QList<QGCMapPolygon*>();
-    _zonePolygonDefense = QList<QGCMapPolygon*>();
+    _mainZonePolygon                        =       QList<QGCMapPolygon*>();
+    _zonePolygonAttack                      =       QList<QGCMapPolygon*>();
+    _zonePolygonDefense                     =       QList<QGCMapPolygon*>();
+
+    _mainZoneCircle                         =       QList<QGCMapCircle*>();
+    _zoneCircleAttack                       =       QList<QGCMapCircle*>();
+    _zoneCircleDefense                      =       QList<QGCMapCircle*>();
+
+    _isCircularZone                         =       false;
 }
 
 void Stratege::setToolbox(QGCToolbox *toolbox)
@@ -220,10 +226,28 @@ void Stratege::setPolygonZoneFromController(QList<QGCMapPolygon*> mainZonePolygo
     emit sendPolygonToZoneController(mainZonePolygon, zonePolygonDefense, zonePolygonAttack);
 }
 
-void Stratege::handleZoneControllerRequest()
+void Stratege::setCircleZoneFromController(QList<QGCMapCircle*> mainZoneCircle, QList<QGCMapCircle*> zoneCircleDefense, QList<QGCMapCircle*> zoneCircleAttack)
 {
-    qDebug() << "handleZoneControllerRequest";
+    qDebug() << "setCircleZoneFromController";
+    _mainZoneCircle = mainZoneCircle;
+    _zoneCircleDefense = zoneCircleDefense;
+    _zoneCircleAttack = zoneCircleAttack;
+
+    emit sendCircleToZoneController(mainZoneCircle, zoneCircleDefense, zoneCircleAttack);
+}
+
+void Stratege::handleZoneControllerRequestPolygon()
+{
+    qDebug() << "handleZoneControllerRequestPolygon";
     emit sendPolygonToZoneController(_mainZonePolygon, _zonePolygonDefense, _zonePolygonAttack);
+    _isCircularZone = false;
+}
+
+void Stratege::handleZoneControllerRequestCircle()
+{
+    qDebug() << "handleZoneControllerRequestCircle";
+    emit sendCircleToZoneController(_mainZoneCircle, _zoneCircleDefense, _zoneCircleAttack);
+    _isCircularZone = true;
 }
 
 //void Stratege::_taskControl()

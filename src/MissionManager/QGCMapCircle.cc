@@ -31,6 +31,21 @@ QGCMapCircle::QGCMapCircle(QObject* parent)
     _init();
 }
 
+// GDP - Start
+QGCMapCircle::QGCMapCircle(const QGeoCoordinate& center, double radius, QObject* parent)
+    : QObject           (parent)
+    , _dirty            (false)
+    , _center           (center)
+    , _radius           (FactSystem::defaultComponentId, _radiusFactName, FactMetaData::valueTypeDouble)
+    , _interactive      (false)
+    , _showRotation     (false)
+    , _clockwiseRotation(true)
+{
+    _radius.setRawValue(radius);
+    _init();
+}
+// GDP - Stop
+
 QGCMapCircle::QGCMapCircle(const QGeoCoordinate& center, double radius, bool showRotation, bool clockwiseRotation, QObject* parent)
     : QObject           (parent)
     , _dirty            (false)
@@ -82,6 +97,13 @@ void QGCMapCircle::setDirty(bool dirty)
         emit dirtyChanged(dirty);
     }
 }
+
+// GDP - Start
+bool QGCMapCircle::containsCoordinate(const QGeoCoordinate& coordinate) const
+{
+    return coordinate.distanceTo(_center) <= _radius.rawValue().toReal();
+}
+// GDP - Stop
 
 void QGCMapCircle::saveToJson(QJsonObject& json)
 {

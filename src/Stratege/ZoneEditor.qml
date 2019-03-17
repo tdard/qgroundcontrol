@@ -81,18 +81,12 @@ QGCFlickable {
                     anchors.right:  parent.right
                     spacing:        ScreenTools.defaultFontPixelHeight / 2
                     visible:        true
-
-                    // GDP - Start
-                    SectionHeader {
-                        id:     rectangleSection
-                        text:   qsTr("Polygonal Zones")
-                    }
-
-                    GridLayout {
+                    GridLayout{
                         anchors.left:           parent.left
                         anchors.right:          parent.right
-                        rows:                   7
+                        rows:                   3
                         flow:                   GridLayout.TopToBottom
+
 
                         QGCTextField {
                             id:                 textFieldLatitude
@@ -108,10 +102,30 @@ QGCFlickable {
                             Layout.row:         1
                         }
 
+
+                        QGCTextField {
+                            id:                 textFieldRotation
+                            placeholderText:    qsTr("Rotation (°)")
+                            validator:          IntValidator{}
+                            Layout.row  :       2
+                        }
+                    }
+                    // GDP - Start
+                    SectionHeader {
+                        id:     rectangleSection
+                        text:   qsTr("Polygonal Zones")
+                    }
+
+                    GridLayout {
+                        anchors.left:           parent.left
+                        anchors.right:          parent.right
+                        rows:                   3
+                        flow:                   GridLayout.TopToBottom
+
                         QGCButton {
                             id:                 buttonBuildMainZone
-                            text:               qsTr("Build Polygon Zones")
-                            Layout.row:         2
+                            text:               qsTr("Construct Main")
+                            Layout.row:         0
                             onClicked: {
                                 var lon = textFieldLongitude.text
                                 var lat = textFieldLatitude.text
@@ -119,18 +133,11 @@ QGCFlickable {
                                 myZoneController.addMainPolygonZone((_clicked) ? _coordinate : QtPositioning.coordinate(parseFloat(lat), parseFloat(lon)))
                             }
                         }
-                        QGCTextField {
-                            id:                 textFieldRotation
-                            placeholderText:    qsTr("Rotation (°)")
-                            validator:          IntValidator{}
-                            Layout.row  :       3
-                        }
-
 
                         QGCButton {
                             id:                 buttonRotateZone
                             text:               qsTr("Rotate")
-                            Layout.row:         4
+                            Layout.row:         1
                             onClicked: {
                                 var rot = (textFieldRotation.text)? parseInt(textFieldRotation.text) : 0
                                 console.log(rot)
@@ -138,29 +145,10 @@ QGCFlickable {
                             }
                         }
 
-//                        QGCButton {
-//                            id:                 buttonBuildDefenseZone
-//                            text:               qsTr("Build defense zones")
-//                            Layout.row:         5
-//                            onClicked: {
-//                                console.log("Build defense zones")
-//                                myZoneController.addZonePolygonDefense()
-//                            }
-//                        }
-//                        QGCButton {
-//                            id:                 buttonBuildAttackZone
-//                            text:               qsTr("Build attack zones")
-//                            Layout.row:         6
-//                            onClicked: {
-//                                console.log("Build attack zones")
-//                                myZoneController.addZonePolygonAttack()
-//                            }
-//                        }
-
                         QGCButton {
                             id:                 buttonBuildAttackAndDefense
-                            text:               qsTr("Build Attack & Defense zones")
-                            Layout.row:         5
+                            text:               qsTr("Construct Additionals")
+                            Layout.row:         2
                             onClicked: {
                                 console.log("Build Attack & Defense zones")
                                 myZoneController.clearAllInteractive()
@@ -169,19 +157,66 @@ QGCFlickable {
                                 myZoneController.sendPolygonZone()
                             }
                         }
-
-                        QGCButton {
-                            id:                 buttonDelete
-                            text:               qsTr("Delete")
-                            Layout.row:         6
-                            onClicked: {
-                                console.log("Delete")
-                                myZoneController.deleteAll()
-                            }
-                        }
-
                     }
                     // GDP - Stop
+                    SectionHeader {
+                        id:     circleSection
+                        text:   qsTr("Circular Zones")
+                    }
+                    GridLayout {
+                        anchors.left:           parent.left
+                        anchors.right:          parent.right
+                        rows:                   3
+                        flow:                   GridLayout.TopToBottom
+
+                        QGCButton {
+                            id:                     buttonBuildMainCircleZone
+                            text:                   qsTr("Construct Main")
+                            Layout.row:             0
+                            onClicked: {
+                                var lon = textFieldLongitude.text
+                                var lat = textFieldLatitude.text
+                                console.log(lon, lat)
+                                myZoneController.addMainCircleZone((_clicked) ? _coordinate : QtPositioning.coordinate(parseFloat(lat), parseFloat(lon)))
+                            }
+
+                        }
+                        QGCButton {
+                            id:                 buttonRotateZoneCircle
+                            text:               qsTr("Rotate")
+                            Layout.row:         1
+                            onClicked: {
+                                var rot = (textFieldRotation.text)? parseInt(textFieldRotation.text) : 0
+                                console.log(rot)
+                                myZoneController.rotateZonesCircle(rot)
+                            }
+                        }
+                        QGCButton {
+                            id:                 buttonBuildAttackAndDefenseCircle
+                            text:               qsTr("Construct Additionals")
+                            Layout.row:         2
+                            onClicked: {
+                                console.log("Build Attack & Defense circular zones")
+                                myZoneController.clearAllInteractive()
+                                myZoneController.addZoneCircleAttack()
+                                myZoneController.addZoneCircleDefense()
+                                myZoneController.sendCircleZone()
+                            }
+                        }
+                    }
+                    SectionHeader {
+                        id:         deleteSection
+                        text:       qsTr("Delete All zones")
+                    }
+                    QGCButton {
+                        id:                 buttonDelete
+                        text:               qsTr("Delete")
+                        onClicked: {
+                            console.log("Delete")
+                            myZoneController.deleteAll()
+                        }
+                    }
+
                 }
             }
         }

@@ -37,6 +37,11 @@ public:
     Q_PROPERTY(bool             showRotation        READ showRotation       WRITE setShowRotation       NOTIFY showRotationChanged)
     Q_PROPERTY(bool             clockwiseRotation   READ clockwiseRotation  WRITE setClockwiseRotation  NOTIFY clockwiseRotationChanged)
 
+    // GDP - Start
+    /// Returns true if the specified coordinate is within the circle
+    Q_INVOKABLE bool containsCoordinate(const QGeoCoordinate& coordinate) const;
+    // GDP - Stop
+
     /// Saves the polygon to the json object.
     ///     @param json Json object to save to
     void saveToJson(QJsonObject& json);

@@ -33,6 +33,9 @@ Item {
     property var    _zonePolygon:               myZoneController.zonePolygon
     property var    _zonePolygonDefense:        myZoneController.zonePolygonDefense
     property var    _zonePolygonAttack:         myZoneController.zonePolygonAttack
+    property var    _zoneCircle:                myZoneController.zoneCircle
+    property var    _zoneCircleDefense:         myZoneController.zoneCircleDefense
+    property var    _zoneCircleAttack:          myZoneController.zoneCircleAttack
     property color  _borderColor:               "grey"
     property int    _borderWidthInclusion:      2
     property int    _borderWidthExclusion:      0
@@ -81,33 +84,45 @@ Item {
         }
     }
 
-//    Instantiator {
-//        model: _circles
+    Instantiator {
+        model: _zoneCircle
 
-//        delegate : QGCMapCircleVisuals {
-//            mapControl:         map
-//            mapCircle:          object
-//            borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
-//            borderColor:        _borderColor
-//            interiorColor:      object.inclusion ? _interiorColorInclusion : _interiorColorExclusion
-//            interiorOpacity:    object.inclusion ? _interiorOpacityInclusion : _interiorOpacityExclusion
-//        }
-//    }
+        delegate : QGCMapCircleVisuals {
+            mapControl:         map
+            mapCircle:          object
+            borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
+            borderColor:        _borderColor
+            interiorColor:      object.inclusion ? _interiorColorInclusion : _interiorColorExclusion
+            interiorOpacity:    0.45
+        }
+    }
 
-//    // GDP - Start
-//    Instantiator {
-//        model: _zonePolygonInfo
+    Instantiator {
+        model: _zoneCircleDefense
 
-//        delegate : QGCMapPolygonVisuals {
-//            mapControl:         map
-//            mapPolygon:         object
-//            borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
-//            borderColor:        "darkmagenta"
-//            interiorColor:      object.inclusion ? _interiorColorInclusion : _interiorColorExclusion
-//            interiorOpacity:    object.inclusion ? _interiorOpacityInclusion : _interiorOpacityExclusion
-//        }
-//    }
-    // GDP - Stop
+        delegate : QGCMapCircleVisuals {
+            mapControl:         map
+            mapCircle:          object
+            borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
+            borderColor:        "blue"
+            interiorColor:      "blue"
+            interiorOpacity:    0.10
+        }
+    }
+
+    Instantiator {
+        model: _zoneCircleAttack
+
+        delegate : QGCMapCircleVisuals {
+            mapControl:         map
+            mapCircle:          object
+            borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
+            borderColor:        "red"
+            interiorColor:      "red"
+            interiorOpacity:    0.07
+        }
+    }
+
 
 //    // Circular geofence specified from parameter
 //    Component {

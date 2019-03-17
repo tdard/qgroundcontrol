@@ -12,6 +12,7 @@
 #include "QTime"
 #include "QVector3D"
 #include "QGCMapPolygon.h"
+#include "QGCMapCircle.h"
 
 class FirmwarePluginManager;
 class QGCApplication;
@@ -85,13 +86,16 @@ public:
 
 signals:
     void sendPolygonToZoneController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack);
+    void sendCircleToZoneController(QList<QGCMapCircle*> mainZoneCircle, QList<QGCMapCircle*> zoneCircleDefense, QList<QGCMapCircle*> zoneCircleAttack);
 
 public slots:
     void abortMission();
     void startMission();
     void updateData(mavlink_message_t message);
     void setPolygonZoneFromController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack);
-    void handleZoneControllerRequest();
+    void setCircleZoneFromController(QList<QGCMapCircle*> mainZoneCircle, QList<QGCMapCircle*> zoneCircleDefense, QList<QGCMapCircle*> zoneCircleAttack);
+    void handleZoneControllerRequestPolygon();
+    void handleZoneControllerRequestCircle();
 
 private slots:
     void _addedVehicle(Vehicle* vehicle); //Modify dynamically the size of the member variables
@@ -107,12 +111,16 @@ private:
     bool _abortMission;
     bool _startMission;
     //bool _activeMission;
-    QTime _time;
-    QMap<Vehicle*, VehicleAttribut*>* _mapVehicle2VehicleAttribut;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
-    QMap<QGeoCoordinate, QVector3D>* _mapTargetsPositions2TargetsVelocities;
-    QList<QGCMapPolygon*> _mainZonePolygon;
-    QList<QGCMapPolygon*> _zonePolygonDefense;
-    QList<QGCMapPolygon*> _zonePolygonAttack;
+    QTime                               _time;
+    QMap<Vehicle*, VehicleAttribut*>*   _mapVehicle2VehicleAttribut;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
+    QMap<QGeoCoordinate, QVector3D>*    _mapTargetsPositions2TargetsVelocities;
+    QList<QGCMapPolygon*>               _mainZonePolygon;
+    QList<QGCMapPolygon*>               _zonePolygonDefense;
+    QList<QGCMapPolygon*>               _zonePolygonAttack;
+    QList<QGCMapCircle*>                _mainZoneCircle;
+    QList<QGCMapCircle*>                _zoneCircleDefense;
+    QList<QGCMapCircle*>                _zoneCircleAttack;
+    bool                                _isCircularZone;
 
 };
 
