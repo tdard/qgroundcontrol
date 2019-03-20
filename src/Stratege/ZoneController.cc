@@ -15,13 +15,18 @@ void ZoneController::start(Stratege* stratege, bool flyView)
     _flyView = flyView;
     _rotation = 0;
 
-    connect(this, &ZoneController::requestZonePolygonFromStratege, stratege, &Stratege::handleZoneControllerRequestPolygon);
-    connect(this, &ZoneController::sendPolygonZoneToStratege, stratege, &Stratege::setPolygonZoneFromController);
-    connect(stratege, &Stratege::sendPolygonToZoneController, this, &ZoneController::setZonePolygonFromStratege);
+    connect(this, &ZoneController::requestZoneRound1FromStratege, stratege, &Stratege::handleZoneControllerRequestRound1);
+    connect(this, &ZoneController::sendRound1ZoneToStratege, stratege, &Stratege::setRound1ZoneFromController);
+    connect(stratege, &Stratege::sendRound1ToZoneController, this, &ZoneController::setRound1ZoneFromStratege);
 
-    connect(this, &ZoneController::requestZoneCircleFromStratege, stratege, &Stratege::handleZoneControllerRequestCircle);
-    connect(this, &ZoneController::sendCircleZoneToStratege, stratege, &Stratege::setCircleZoneFromController);
-    connect(stratege, &Stratege::sendCircleToZoneController, this, &ZoneController::setZoneCircleFromStratege);
+    connect(this, &ZoneController::requestZoneRound2FromStratege, stratege, &Stratege::handleZoneControllerRequestRound2);
+    connect(this, &ZoneController::sendRound2ZoneToStratege, stratege, &Stratege::setRound2ZoneFromController);
+    connect(stratege, &Stratege::sendRound2ToZoneController, this, &ZoneController::setRound2ZoneFromStratege);
+
+    connect(this, &ZoneController::requestZoneRound3FromStratege, stratege, &Stratege::handleZoneControllerRequestRound3);
+    connect(this, &ZoneController::sendRound3ZoneToStratege, stratege, &Stratege::setRound3ZoneFromController);
+    connect(stratege, &Stratege::sendRound3ToZoneController, this, &ZoneController::setRound3ZoneFromStratege);
+
 }
 
 void ZoneController::addMainPolygonZone(QGeoCoordinate center, int height, int width)
@@ -55,10 +60,12 @@ void ZoneController::addMainPolygonZone(QGeoCoordinate center, int height, int w
     zonePolygon->setInteractive(true);
 }
 
-void ZoneController::addZonePolygonDefense(int numberInAltitude, int numberInHeight)
+void ZoneController::addZoneDefenseRound1(int numberInAltitude, int numberInHeight)
 {
-    qDebug() << "addZonePolygonDefense" ;
-    if (_zonePolygon.count() < 0) { return; }
+    //Safety
+    if (_zonePolygon.count() == 0) { return; }
+
+    qDebug() << "addzoneDefenseRound1" ;
 
     QGCMapPolygon* mainPolygon =                _zonePolygon.value<QGCMapPolygon*>(0);   //normally, this method cannot be appealed if zonePolygon does not have 1 element
     qDebug() << mainPolygon->center();
@@ -84,21 +91,24 @@ void ZoneController::addZonePolygonDefense(int numberInAltitude, int numberInHei
             QGeoCoordinate bottomLeft =        center.atDistanceAndAzimuth(halfWidthMeters, -90 - _rotation).atDistanceAndAzimuth(halfHeightMeters, 180 - _rotation );
             QGeoCoordinate bottomRight =       center.atDistanceAndAzimuth(halfWidthMeters, 90 - _rotation).atDistanceAndAzimuth(halfHeightMeters,  180 - _rotation);
 
-            QGCMapPolygon* zonePolygonDefense = new QGCMapPolygon(this);
-            zonePolygonDefense->appendVertex(topLeft);
-            zonePolygonDefense->appendVertex(topRight);
-            zonePolygonDefense->appendVertex(bottomRight);
-            zonePolygonDefense->appendVertex(bottomLeft);
+            QGCMapPolygon* zoneDefenseRound1 = new QGCMapPolygon(this);
+            zoneDefenseRound1->appendVertex(topLeft);
+            zoneDefenseRound1->appendVertex(topRight);
+            zoneDefenseRound1->appendVertex(bottomRight);
+            zoneDefenseRound1->appendVertex(bottomLeft);
 
-            _zonePolygonDefense.append(zonePolygonDefense);
+            _zoneDefenseRound1.append(zoneDefenseRound1);
         }
     }
 }
 
 
-void ZoneController::addZonePolygonAttack(int numberInAltitude, int numberInHeight)
+void ZoneController::addZoneAttackRound1(int numberInAltitude, int numberInHeight)
 {
-    qDebug() << "addZonePolygonAttack" ;
+    //Safety
+    if (_zonePolygon.count() == 0) { return; }
+
+    qDebug() << "addzoneAttackRound1" ;
     if (_zonePolygon.count() < 0) { return; }
 
     QGCMapPolygon* mainPolygon =                _zonePolygon.value<QGCMapPolygon*>(0);   //normally, this method cannot be appealed if zonePolygon does not have 1 element
@@ -125,60 +135,101 @@ void ZoneController::addZonePolygonAttack(int numberInAltitude, int numberInHeig
             QGeoCoordinate bottomLeft =        center.atDistanceAndAzimuth(halfWidthMeters, -90 - _rotation).atDistanceAndAzimuth(halfHeightMeters, 180 - _rotation );
             QGeoCoordinate bottomRight =       center.atDistanceAndAzimuth(halfWidthMeters, 90 - _rotation).atDistanceAndAzimuth(halfHeightMeters,  180 - _rotation);
 
-            QGCMapPolygon* zonePolygonAttack = new QGCMapPolygon(this);
-            zonePolygonAttack->appendVertex(topLeft);
-            zonePolygonAttack->appendVertex(topRight);
-            zonePolygonAttack->appendVertex(bottomRight);
-            zonePolygonAttack->appendVertex(bottomLeft);
+            QGCMapPolygon* zoneAttackRound1 = new QGCMapPolygon(this);
+            zoneAttackRound1->appendVertex(topLeft);
+            zoneAttackRound1->appendVertex(topRight);
+            zoneAttackRound1->appendVertex(bottomRight);
+            zoneAttackRound1->appendVertex(bottomLeft);
 
-            _zonePolygonAttack.append(zonePolygonAttack);
+            _zoneAttackRound1.append(zoneAttackRound1);
         }
     }
 }
 
-void ZoneController::addMainCircleZone(QGeoCoordinate center, int radius)
-{
-    QGCMapCircle* zoneCircle = new QGCMapCircle(center, radius);
-    center.setAltitude(0.0);
-    _zoneCircle.append(zoneCircle);
-    clearAllInteractive();
-    zoneCircle->setInteractive(true);
-}
+void ZoneController::addZoneDefenseRound2(int numberInAltitude, int radius)
+{    
+    //Safety
+    if (_zonePolygon.count() == 0) { return; }
 
-void ZoneController::addZoneCircleDefense(int numberInAltitude, int radius)
-{
-    QGeoCoordinate center = _zoneCircle.value<QGCMapCircle*>(0)->center();
-
-    qDebug() << "rotation defense:" << _rotation;
-
-    double halfRadius = _zoneCircle.value<QGCMapCircle*>(0)->radius()->rawValue().toDouble() / 2.0;
-    QGeoCoordinate defenseCenter = center.atDistanceAndAzimuth(halfRadius, -90 - _rotation);
+    QGCMapPolygon* mainPolygon =        _zonePolygon.value<QGCMapPolygon*>(0);
+    QGeoCoordinate mainCenter =         mainPolygon->center();
+    QGeoCoordinate defenseCenter =      mainCenter.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - LITTLE_CIRCLE_RADIUS, -90 - _rotation);
 
     for (int i = 0; i < numberInAltitude; ++i)
     {
         defenseCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
-        QGCMapCircle* zoneCircleDefense = new QGCMapCircle(defenseCenter, radius);
-        _zoneCircleDefense.append(zoneCircleDefense);
+        QGCMapCircle* zoneDefenseRound2 = new QGCMapCircle(defenseCenter, radius);
+        _zoneDefenseRound2.append(zoneDefenseRound2);
     }
 }
 
-void ZoneController::addZoneCircleAttack(int numberInAltitude, int radius)
+void ZoneController::addZoneAttackRound2(int numberInAltitude, int radius)
 {
-    QGeoCoordinate center = _zoneCircle.value<QGCMapCircle*>(0)->center();
+    //Safety
+    if (_zonePolygon.count() == 0) { return; }
 
-    double halfRadius = _zoneCircle.value<QGCMapCircle*>(0)->radius()->rawValue().toDouble() / 2.0;
-    QGeoCoordinate attackCenter = center.atDistanceAndAzimuth(halfRadius, 90 - _rotation);
+    QGCMapPolygon* mainPolygon =        _zonePolygon.value<QGCMapPolygon*>(0);
+    QGeoCoordinate mainCenter =         mainPolygon->center();
+    QGeoCoordinate attackCenter =       mainCenter.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - LITTLE_CIRCLE_RADIUS, 90 - _rotation);
 
     for (int i = 0; i < numberInAltitude; ++i)
     {
         attackCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
-        QGCMapCircle* zoneCircleAttack = new QGCMapCircle(attackCenter, radius);
-        _zoneCircleAttack.append(zoneCircleAttack);
+        QGCMapCircle* zoneAttackRound2 = new QGCMapCircle(attackCenter, radius);
+        _zoneAttackRound2.append(zoneAttackRound2);
     }
 }
 
+void ZoneController::addZoneDefenseRound3(int numberInAltitude, double radius)
+{
+    //Safety
+    if (_zonePolygon.count() == 0) { return; }
+
+    QGCMapPolygon* mainPolygon =        _zonePolygon.value<QGCMapPolygon*>(0);
+    QGeoCoordinate center =             mainPolygon->center();
+
+    for (int i = 0; i < numberInAltitude; ++i)
+    {
+        QGeoCoordinate topCenter    = center.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - ROUND_3_CIRCLE_RADIUS, -90 - _rotation).atDistanceAndAzimuth(10, -_rotation);
+        topCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
+        QGCMapCircle* zoneDefenseRound3 = new QGCMapCircle(topCenter, radius);
+        _zoneDefenseRound3.append(zoneDefenseRound3);
+
+        QGeoCoordinate bottomCenter = center.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - ROUND_3_CIRCLE_RADIUS, -90 - _rotation).atDistanceAndAzimuth(10, -180 - _rotation);
+        bottomCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
+        zoneDefenseRound3 = new QGCMapCircle(bottomCenter, radius);
+        _zoneDefenseRound3.append(zoneDefenseRound3);
+    }
+}
+
+void ZoneController::addZoneAttackRound3(int numberInAltitude, double radius)
+{
+    //Safety
+    if (_zonePolygon.count() == 0) { return; }
+
+    QGCMapPolygon* mainPolygon =        _zonePolygon.value<QGCMapPolygon*>(0);
+    QGeoCoordinate center =         mainPolygon->center();
+
+    for (int i = 0; i < numberInAltitude; ++i)
+    {
+        QGeoCoordinate topCenter    = center.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - ROUND_3_CIRCLE_RADIUS, 90 - _rotation).atDistanceAndAzimuth(15, -_rotation);
+        topCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
+        QGCMapCircle* zoneAttackRound3 = new QGCMapCircle(topCenter, radius);
+        _zoneAttackRound3.append(zoneAttackRound3);
+
+        QGeoCoordinate bottomCenter = center.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - ROUND_3_CIRCLE_RADIUS, 90 - _rotation).atDistanceAndAzimuth(15, -180 - _rotation);
+        bottomCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
+        zoneAttackRound3 = new QGCMapCircle(bottomCenter, radius);
+        _zoneAttackRound3.append(zoneAttackRound3);
+    }
+}
+
+
 void ZoneController::rotateZones(int index, int rotation, int height, int width)
 {
+    //Safety
+    if (_zonePolygon.count() == 0) { return; }
+
     qDebug() << "Rotate Zones";
     _rotation = rotation;
 
@@ -201,28 +252,28 @@ void ZoneController::rotateZones(int index, int rotation, int height, int width)
     zonePolygon->adjustVertex(3, bottomLeft);
 }
 
-void ZoneController::rotateZonesCircle(int rotation)
-{
-    qDebug() << "Rotate Zones Circle";
-    _rotation = rotation;
-}
 
 void ZoneController::deleteAll(void)
 {
     qDebug() << "deleteAll";
-    _zoneCircle.clear();
-    _zoneCircleAttack.clear();
-    _zoneCircleDefense.clear();
-    sendCircleZone();
     _zonePolygon.clear();
-    _zonePolygonAttack.clear();
-    _zonePolygonDefense.clear();
-    sendPolygonZone();
+
+    _zoneAttackRound2.clear();
+    _zoneDefenseRound2.clear();
+    sendRound2Zone();
+
+    _zoneAttackRound3.clear();
+    _zoneDefenseRound3.clear();
+    sendRound3Zone();
+
+    _zoneAttackRound1.clear();
+    _zoneDefenseRound1.clear();
+    sendRound1Zone();
 }
 
-void ZoneController::sendPolygonZone(void)
+void ZoneController::sendRound1Zone(void)
 {
-    qDebug() << "sendPolygonZoneToStratege";
+    qDebug() << "sendRound1ZoneToStratege";
 
     QList<QGCMapPolygon*> zonePolygon = QList<QGCMapPolygon*>();
     for (int i = 0; i < _zonePolygon.count(); ++i)
@@ -230,120 +281,176 @@ void ZoneController::sendPolygonZone(void)
         zonePolygon.append(_zonePolygon.value<QGCMapPolygon*>(i));
     }
 
-    QList<QGCMapPolygon*> zonePolygonDefense = QList<QGCMapPolygon*>();
-    for (int i = 0; i < _zonePolygonDefense.count(); ++i)
+    QList<QGCMapPolygon*> zoneDefenseRound1 = QList<QGCMapPolygon*>();
+    for (int i = 0; i < _zoneDefenseRound1.count(); ++i)
     {
-        zonePolygonDefense.append(_zonePolygonDefense.value<QGCMapPolygon*>(i));
+        zoneDefenseRound1.append(_zoneDefenseRound1.value<QGCMapPolygon*>(i));
     }
 
-    QList<QGCMapPolygon*> zonePolygonAttack = QList<QGCMapPolygon*>();
-    for (int i = 0; i < _zonePolygonAttack.count(); ++i)
+    QList<QGCMapPolygon*> zoneAttackRound1 = QList<QGCMapPolygon*>();
+    for (int i = 0; i < _zoneAttackRound1.count(); ++i)
     {
-        zonePolygonAttack.append(_zonePolygonAttack.value<QGCMapPolygon*>(i));
+        zoneAttackRound1.append(_zoneAttackRound1.value<QGCMapPolygon*>(i));
     }
 
-    emit sendPolygonZoneToStratege(zonePolygon, zonePolygonDefense, zonePolygonAttack);
+    emit sendRound1ZoneToStratege(zonePolygon, zoneDefenseRound1, zoneAttackRound1);
 }
 
-void ZoneController::sendCircleZone(void)
+void ZoneController::sendRound2Zone(void)
 {
-    qDebug() << "sendCircleZoneToStratege";
+    qDebug() << "sendRound2ZoneToStratege";
 
-    QList<QGCMapCircle*> zoneCircle = QList<QGCMapCircle*>();
-    for (int i = 0; i < _zoneCircle.count(); ++i)
+    QList<QGCMapPolygon*> zonePolygon = QList<QGCMapPolygon*>();
+    for (int i = 0; i < _zonePolygon.count(); ++i)
     {
-        zoneCircle.append(_zoneCircle.value<QGCMapCircle*>(i));
+        zonePolygon.append(_zonePolygon.value<QGCMapPolygon*>(i));
     }
 
-    QList<QGCMapCircle*> zoneCircleDefense = QList<QGCMapCircle*>();
-    for (int i = 0; i < _zoneCircleDefense.count(); ++i)
+    QList<QGCMapCircle*> zoneDefenseRound2 = QList<QGCMapCircle*>();
+    for (int i = 0; i < _zoneDefenseRound2.count(); ++i)
     {
-        zoneCircleDefense.append(_zoneCircleDefense.value<QGCMapCircle*>(i));
+        zoneDefenseRound2.append(_zoneDefenseRound2.value<QGCMapCircle*>(i));
     }
 
-    QList<QGCMapCircle*> zoneCircleAttack = QList<QGCMapCircle*>();
-    for (int i = 0; i < _zoneCircleAttack.count(); ++i)
+    QList<QGCMapCircle*> zoneAttackRound2 = QList<QGCMapCircle*>();
+    for (int i = 0; i < _zoneAttackRound2.count(); ++i)
     {
-        zoneCircleAttack.append(_zoneCircleAttack.value<QGCMapCircle*>(i));
+        zoneAttackRound2.append(_zoneAttackRound2.value<QGCMapCircle*>(i));
     }
 
-    emit sendCircleZoneToStratege(zoneCircle, zoneCircleDefense, zoneCircleAttack);
+    emit sendRound2ZoneToStratege(zonePolygon, zoneDefenseRound2, zoneAttackRound2);
+}
+
+void ZoneController::sendRound3Zone(void)
+{
+    qDebug() << "sendRound3ZoneToStratege";
+
+    QList<QGCMapPolygon*> zonePolygon = QList<QGCMapPolygon*>();
+    for (int i = 0; i < _zonePolygon.count(); ++i)
+    {
+        zonePolygon.append(_zonePolygon.value<QGCMapPolygon*>(i));
+    }
+
+    QList<QGCMapCircle*> zoneDefenseRound3 = QList<QGCMapCircle*>();
+    for (int i = 0; i < _zoneDefenseRound3.count(); ++i)
+    {
+        zoneDefenseRound3.append(_zoneDefenseRound3.value<QGCMapCircle*>(i));
+    }
+
+    QList<QGCMapCircle*> zoneAttackRound3 = QList<QGCMapCircle*>();
+    for (int i = 0; i < _zoneAttackRound3.count(); ++i)
+    {
+        zoneAttackRound3.append(_zoneAttackRound3.value<QGCMapCircle*>(i));
+    }
+
+    emit sendRound3ZoneToStratege(zonePolygon, zoneDefenseRound3, zoneAttackRound3);
 }
 
 void ZoneController::clearAllInteractive(void)
 {
     qDebug() << "clearAllInteractive";
 
-    //Polygons
     for (int i=0; i<_zonePolygon.count(); i++) {
         _zonePolygon.value<QGCMapPolygon*>(i)->setInteractive(false);
     }
-    for (int i=0; i<_zonePolygonDefense.count(); i++) {
-        _zonePolygonDefense.value<QGCMapPolygon*>(i)->setInteractive(false);
+
+    //Round 1
+    for (int i=0; i<_zoneDefenseRound1.count(); i++) {
+        _zoneDefenseRound1.value<QGCMapPolygon*>(i)->setInteractive(false);
     }
-    for (int i=0; i<_zonePolygonAttack.count(); i++) {
-        _zonePolygonAttack.value<QGCMapPolygon*>(i)->setInteractive(false);
+    for (int i=0; i<_zoneAttackRound1.count(); i++) {
+        _zoneAttackRound1.value<QGCMapPolygon*>(i)->setInteractive(false);
     }
 
-    //Circles
-    for (int i=0; i<_zoneCircle.count(); i++) {
-        _zoneCircle.value<QGCMapCircle*>(i)->setInteractive(false);
+    //Round 2
+    for (int i=0; i<_zoneDefenseRound2.count(); i++) {
+        _zoneDefenseRound2.value<QGCMapCircle*>(i)->setInteractive(false);
     }
-    for (int i=0; i<_zoneCircleDefense.count(); i++) {
-        _zoneCircleDefense.value<QGCMapCircle*>(i)->setInteractive(false);
+    for (int i=0; i<_zoneAttackRound2.count(); i++) {
+        _zoneAttackRound2.value<QGCMapCircle*>(i)->setInteractive(false);
     }
-    for (int i=0; i<_zoneCircleAttack.count(); i++) {
-        _zoneCircleAttack.value<QGCMapCircle*>(i)->setInteractive(false);
+
+    //Round 3
+    for (int i=0; i<_zoneDefenseRound3.count(); i++) {
+        _zoneDefenseRound3.value<QGCMapCircle*>(i)->setInteractive(false);
+    }
+    for (int i=0; i<_zoneAttackRound3.count(); i++) {
+        _zoneAttackRound3.value<QGCMapCircle*>(i)->setInteractive(false);
     }
 }
 
-void ZoneController::setZonePolygonFromStratege(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack)
+void ZoneController::setRound1ZoneFromStratege(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zoneDefenseRound1, QList<QGCMapPolygon*> zoneAttackRound1)
 {
-    qDebug() << "setZonePolygonFromStratege, flyView:" << _flyView;
+    qDebug() << "setRound1FromStratege, flyView:" << _flyView;
     if (_flyView == false) { return; }
 
     _zonePolygon.clear();
-    _zonePolygonAttack.clear();
-    _zonePolygonDefense.clear();
+    _zoneAttackRound1.clear();
+    _zoneDefenseRound1.clear();
 
     for (int i = 0; i < mainZonePolygon.count(); ++i)
     {
         _zonePolygon.append(mainZonePolygon.at(i));
     }
 
-    for (int i = 0; i < zonePolygonDefense.count(); ++i)
+    for (int i = 0; i < zoneDefenseRound1.count(); ++i)
     {
-        _zonePolygonDefense.append(zonePolygonDefense.at(i));
+        _zoneDefenseRound1.append(zoneDefenseRound1.at(i));
     }
 
-    for (int i = 0; i < zonePolygonAttack.count(); ++i)
+    for (int i = 0; i < zoneAttackRound1.count(); ++i)
     {
-        _zonePolygonAttack.append(zonePolygonAttack.at(i));
+        _zoneAttackRound1.append(zoneAttackRound1.at(i));
     }
 }
 
-void ZoneController::setZoneCircleFromStratege(QList<QGCMapCircle*> mainZoneCircle, QList<QGCMapCircle*> zoneCircleDefense, QList<QGCMapCircle*> zoneCircleAttack)
+void ZoneController::setRound2ZoneFromStratege(QList<QGCMapPolygon*> mainzonePolygon, QList<QGCMapCircle*> zoneDefenseRound2, QList<QGCMapCircle*> zoneAttackRound2)
 {
-    qDebug() << "setZoneCircleFromStratege, flyView:" << _flyView;
+    qDebug() << "setRound2FromStratege, flyView:" << _flyView;
     if (_flyView == false) { return; }
 
-    _zoneCircle.clear();
-    _zoneCircleAttack.clear();
-    _zoneCircleDefense.clear();
+    _zonePolygon.clear();
+    _zoneAttackRound2.clear();
+    _zoneDefenseRound2.clear();
 
-    for (int i = 0; i < mainZoneCircle.count(); ++i)
+    for (int i = 0; i < mainzonePolygon.count(); ++i)
     {
-        _zoneCircle.append(mainZoneCircle.at(i));
+        _zonePolygon.append(mainzonePolygon.at(i));
     }
 
-    for (int i = 0; i < zoneCircleDefense.count(); ++i)
+    for (int i = 0; i < zoneDefenseRound2.count(); ++i)
     {
-        _zoneCircleDefense.append(zoneCircleDefense.at(i));
+        _zoneDefenseRound2.append(zoneDefenseRound2.at(i));
     }
 
-    for (int i = 0; i < zoneCircleAttack.count(); ++i)
+    for (int i = 0; i < zoneAttackRound2.count(); ++i)
     {
-        _zoneCircleAttack.append(zoneCircleAttack.at(i));
+        _zoneAttackRound2.append(zoneAttackRound2.at(i));
+    }
+}
+
+void ZoneController::setRound3ZoneFromStratege(QList<QGCMapPolygon*> mainzonePolygon, QList<QGCMapCircle*> zoneDefenseRound3, QList<QGCMapCircle*> zoneAttackRound3)
+{
+    qDebug() << "setRound3FromStratege, flyView:" << _flyView;
+    if (_flyView == false) { return; }
+
+    _zonePolygon.clear();
+    _zoneAttackRound3.clear();
+    _zoneDefenseRound3.clear();
+
+    for (int i = 0; i < mainzonePolygon.count(); ++i)
+    {
+        _zonePolygon.append(mainzonePolygon.at(i));
+    }
+
+    for (int i = 0; i < zoneDefenseRound3.count(); ++i)
+    {
+        _zoneDefenseRound3.append(zoneDefenseRound3.at(i));
+    }
+
+    for (int i = 0; i < zoneAttackRound3.count(); ++i)
+    {
+        _zoneAttackRound3.append(zoneAttackRound3.at(i));
     }
 }
 

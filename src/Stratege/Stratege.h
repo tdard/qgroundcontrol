@@ -85,17 +85,20 @@ public:
     virtual void setToolbox(QGCToolbox* toolbox);
 
 signals:
-    void sendPolygonToZoneController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack);
-    void sendCircleToZoneController(QList<QGCMapCircle*> mainZoneCircle, QList<QGCMapCircle*> zoneCircleDefense, QList<QGCMapCircle*> zoneCircleAttack);
+    void sendRound1ToZoneController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zoneDefenseRound1, QList<QGCMapPolygon*> zoneAttackRound1);
+    void sendRound2ToZoneController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapCircle*> zoneDefenseRound2, QList<QGCMapCircle*> zoneAttackRound2);
+    void sendRound3ToZoneController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapCircle*> zoneDefenseRound3, QList<QGCMapCircle*> zoneAttackRound3);
 
 public slots:
     void abortMission();
     void startMission();
     void updateData(mavlink_message_t message);
-    void setPolygonZoneFromController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack);
-    void setCircleZoneFromController(QList<QGCMapCircle*> mainZoneCircle, QList<QGCMapCircle*> zoneCircleDefense, QList<QGCMapCircle*> zoneCircleAttack);
-    void handleZoneControllerRequestPolygon();
-    void handleZoneControllerRequestCircle();
+    void setRound1ZoneFromController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zoneDefenseRound1, QList<QGCMapPolygon*> zoneAttackRound1);
+    void setRound2ZoneFromController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapCircle*> zoneDefenseRound2, QList<QGCMapCircle*> zoneAttackRound2);
+    void setRound3ZoneFromController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapCircle*> zoneDefenseRound3, QList<QGCMapCircle*> zoneAttackRound3);
+    void handleZoneControllerRequestRound1(); //TO MODIFY ?
+    void handleZoneControllerRequestRound2(); //TO MODIFY
+    void handleZoneControllerRequestRound3(); //TODO
 
 private slots:
     void _addedVehicle(Vehicle* vehicle); //Modify dynamically the size of the member variables
@@ -115,11 +118,12 @@ private:
     QMap<Vehicle*, VehicleAttribut*>*   _mapVehicle2VehicleAttribut;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
     QMap<QGeoCoordinate, QVector3D>*    _mapTargetsPositions2TargetsVelocities;
     QList<QGCMapPolygon*>               _mainZonePolygon;
-    QList<QGCMapPolygon*>               _zonePolygonDefense;
-    QList<QGCMapPolygon*>               _zonePolygonAttack;
-    QList<QGCMapCircle*>                _mainZoneCircle;
-    QList<QGCMapCircle*>                _zoneCircleDefense;
-    QList<QGCMapCircle*>                _zoneCircleAttack;
+    QList<QGCMapPolygon*>               _zoneDefenseRound1;
+    QList<QGCMapPolygon*>               _zoneAttackRound1;
+    QList<QGCMapCircle*>                _zoneDefenseRound2;
+    QList<QGCMapCircle*>                _zoneAttackRound2;
+    QList<QGCMapCircle*>                _zoneDefenseRound3;
+    QList<QGCMapCircle*>                _zoneAttackRound3;
     bool                                _isCircularZone;
 
 };

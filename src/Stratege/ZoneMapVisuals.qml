@@ -31,17 +31,18 @@ Item {
 
     property var    _paramCircleFenceComponent
     property var    _zonePolygon:               myZoneController.zonePolygon
-    property var    _zonePolygonDefense:        myZoneController.zonePolygonDefense
-    property var    _zonePolygonAttack:         myZoneController.zonePolygonAttack
-    property var    _zoneCircle:                myZoneController.zoneCircle
-    property var    _zoneCircleDefense:         myZoneController.zoneCircleDefense
-    property var    _zoneCircleAttack:          myZoneController.zoneCircleAttack
+    property var    _zoneDefenseRound1:         myZoneController.zoneDefenseRound1
+    property var    _zoneAttackRound1:          myZoneController.zoneAttackRound1
+    property var    _zoneDefenseRound2:         myZoneController.zoneDefenseRound2
+    property var    _zoneAttackRound2:          myZoneController.zoneAttackRound2
+    property var    _zoneDefenseRound3:         myZoneController.zoneDefenseRound3
+    property var    _zoneAttackRound3:          myZoneController.zoneAttackRound3
     property color  _borderColor:               "grey"
     property int    _borderWidthInclusion:      2
     property int    _borderWidthExclusion:      0
     property color  _interiorColorExclusion:    "grey"
     property color  _interiorColorInclusion:    "transparent"
-    property real   _interiorOpacityExclusion:  0.2
+    property real   _interiorOpacityExclusion:  0.25
     property real   _interiorOpacityInclusion:  1
 
 
@@ -59,7 +60,7 @@ Item {
     }
 
     Instantiator {
-        model: _zonePolygonDefense
+        model: _zoneDefenseRound1
 
         delegate : QGCMapPolygonVisuals {
             mapControl:         map
@@ -72,7 +73,7 @@ Item {
     }
 
     Instantiator {
-        model: _zonePolygonAttack
+        model: _zoneAttackRound1
 
         delegate : QGCMapPolygonVisuals {
             mapControl:         map
@@ -84,21 +85,10 @@ Item {
         }
     }
 
-    Instantiator {
-        model: _zoneCircle
 
-        delegate : QGCMapCircleVisuals {
-            mapControl:         map
-            mapCircle:          object
-            borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
-            borderColor:        _borderColor
-            interiorColor:      object.inclusion ? _interiorColorInclusion : _interiorColorExclusion
-            interiorOpacity:    0.45
-        }
-    }
 
     Instantiator {
-        model: _zoneCircleDefense
+        model: _zoneDefenseRound2
 
         delegate : QGCMapCircleVisuals {
             mapControl:         map
@@ -111,7 +101,7 @@ Item {
     }
 
     Instantiator {
-        model: _zoneCircleAttack
+        model: _zoneAttackRound2
 
         delegate : QGCMapCircleVisuals {
             mapControl:         map
@@ -123,24 +113,32 @@ Item {
         }
     }
 
+    Instantiator {
+        model: _zoneDefenseRound3
 
-//    // Circular geofence specified from parameter
-//    Component {
-//        id: paramCircleFenceComponent
+        delegate : QGCMapCircleVisuals {
+            mapControl:         map
+            mapCircle:          object
+            borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
+            borderColor:        "blue"
+            interiorColor:      "blue"
+            interiorOpacity:    0.20
+        }
+    }
 
-//        MapCircle {
-//            color:          _interiorColorInclusion
-//            opacity:        _interiorOpacityInclusion
-//            border.color:   _borderColor
-//            border.width:   _borderWidthInclusion
-//            center:         homePosition
-//            radius:         _radius
-//            visible:        homePosition.isValid && _radius > 0
+    Instantiator {
+        model: _zoneAttackRound3
 
-//            property real _radius: myGeoFenceController.paramCircularFence
+        delegate : QGCMapCircleVisuals {
+            mapControl:         map
+            mapCircle:          object
+            borderWidth:        object.inclusion ? _borderWidthInclusion : _borderWidthExclusion
+            borderColor:        "red"
+            interiorColor:      "red"
+            interiorOpacity:    0.15
+        }
+    }
 
-//            on_RadiusChanged: console.log("_radius", _radius, homePosition.isValid, homePosition)
-//        }
-//    }
+
 
 }

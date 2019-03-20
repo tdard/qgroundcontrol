@@ -42,12 +42,15 @@ Stratege::Stratege(QGCApplication* app, QGCToolbox* toolbox): QGCTool(app, toolb
     _mapTargetsPositions2TargetsVelocities  =       new QMap<QGeoCoordinate, QVector3D>();
 
     _mainZonePolygon                        =       QList<QGCMapPolygon*>();
-    _zonePolygonAttack                      =       QList<QGCMapPolygon*>();
-    _zonePolygonDefense                     =       QList<QGCMapPolygon*>();
 
-    _mainZoneCircle                         =       QList<QGCMapCircle*>();
-    _zoneCircleAttack                       =       QList<QGCMapCircle*>();
-    _zoneCircleDefense                      =       QList<QGCMapCircle*>();
+    _zoneAttackRound1                       =       QList<QGCMapPolygon*>();
+    _zoneDefenseRound1                      =       QList<QGCMapPolygon*>();
+
+    _zoneAttackRound2                       =       QList<QGCMapCircle*>();
+    _zoneDefenseRound2                      =       QList<QGCMapCircle*>();
+
+    _zoneAttackRound3                       =       QList<QGCMapCircle*>();
+    _zoneDefenseRound3                      =       QList<QGCMapCircle*>();
 
     _isCircularZone                         =       false;
 }
@@ -85,14 +88,14 @@ void Stratege::startMission()
 //    //See the patrol zones
 //    if(_isCircularZone)
 //    {
-//        for(auto zone : _zoneCircleAttack)
+//        for(auto zone : _zoneAttackRound2)
 //        {
 //            qDebug() << "Circular attack zone : " << zone;
 //            qDebug() << "longitude : " << zone->center().longitude();
 //            qDebug() << "latitude : " << zone->center().latitude();
 //            qDebug() << "altitude : " << zone->center().altitude();
 //        }
-//        for(auto zone : _zoneCircleDefense)
+//        for(auto zone : _zoneDefenseRound2)
 //        {
 //            qDebug() << "Circular  defense zone : " << zone;
 //            qDebug() << "longitude : " << zone->center().longitude();
@@ -103,14 +106,14 @@ void Stratege::startMission()
 
 //    if(!_isCircularZone)
 //    {
-//        for(auto zone : _zonePolygonAttack)
+//        for(auto zone : _zoneAttackRound1)
 //        {
 //            qDebug() << "Polygon attack zone : " << zone;
 //            qDebug() << "longitude : " << zone->center().longitude();
 //            qDebug() << "latitude : " << zone->center().latitude();
 //            qDebug() << "altitude : " << zone->center().altitude();
 //        }
-//        for(auto zone : _zonePolygonDefense)
+//        for(auto zone : _zoneDefenseRound1)
 //        {
 //            qDebug() << "Polygon defense zone : " << zone;
 //            qDebug() << "longitude : " << zone->center().longitude();
@@ -153,13 +156,13 @@ void Stratege::_attack(Vehicle* vm)
         QGeoCoordinate waypoint;
         if (_isCircularZone)
         {
-            waypoint = _zoneCircleAttack[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center();
+            waypoint = _zoneAttackRound2[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center();
             double alt = vm->homePosition().altitude() + waypoint.altitude();
             vm->guidedModeOrbit(waypoint, 4, alt);
         }
         if (!_isCircularZone)
         {
-            waypoint = _zonePolygonAttack[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center();
+            waypoint = _zoneAttackRound1[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center();
             double alt = vm->homePosition().altitude() + waypoint.altitude();
             vm->guidedModeOrbit(waypoint, 10, alt);
         }
@@ -170,19 +173,20 @@ void Stratege::_attack(Vehicle* vm)
     //Placement before landing
 //    if (_time.secsTo(QTime::currentTime()) < 80)
 //    {
-//        QGeoCoordinate waypoint = _zonePolygonAttack[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center();
+//        QGeoCoordinate waypoint = _zoneAttackRound1[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center();
 //        vm->firmwarePlugin()->guidedModeGotoLocation(vm, waypoint);
 //    }
 
     //Back to attack if outside of the zone
-//    if(_mapVehicle2VehicleAttribut->value(vm)->_inattack && !_zonePolygonAttack[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->containsCoordinate(vm->coordinate()))
+//    if(_mapVehicle2VehicleAttribut->value(vm)->_inattack && !_zoneAttackRound1[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->containsCoordinate(vm->coordinate()))
 //    {
-//        QGeoCoordinate waypoint = _zonePolygonAttack[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center();
+//        QGeoCoordinate waypoint = _zoneAttackRound1[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center();
 //        double alt = vm->homePosition().altitude() + waypoint.altitude();
 //        vm->guidedModeOrbit(waypoint, 10, alt);
 //        _mapVehicle2VehicleAttribut->value(vm)->_inattack = true;
 //        qDebug() << "Vehicle: " << vm->id() << " out of attack zone : return to attack mode | time: " << _time.secsTo(QTime::currentTime());
 //    }
+
 }
 
 void Stratege::_patrol(Vehicle* vm)
@@ -194,14 +198,14 @@ void Stratege::_patrol(Vehicle* vm)
         QGeoCoordinate waypoint;
         if (_isCircularZone)
         {
-            waypoint = _zoneCircleDefense[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center();
+            waypoint = _zoneDefenseRound2[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center();
             double alt = vm->homePosition().altitude() + waypoint.altitude();
             vm->guidedModeOrbit(waypoint, 4, alt);
 
         }
         if (!_isCircularZone)
         {
-            waypoint = _zonePolygonDefense[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center();
+            waypoint = _zoneDefenseRound1[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center();
             double alt = vm->homePosition().altitude() + waypoint.altitude();
             vm->guidedModeOrbit(waypoint, 10, alt);
 
@@ -217,7 +221,7 @@ void Stratege::_patrol(Vehicle* vm)
         for (auto othervehicle : _mapVehicle2VehicleAttribut->keys())
         {
             int underdefpatroliter = _mapVehicle2VehicleAttribut->value(vm)->_defpatroliter - 2;
-            if(_mapVehicle2VehicleAttribut->value(othervehicle)->_defpatroliter == underdefpatroliter && _zonePolygonDefense[underdefpatroliter]->containsCoordinate(othervehicle->coordinate()))
+            if(_mapVehicle2VehicleAttribut->value(othervehicle)->_defpatroliter == underdefpatroliter && _zoneDefenseRound1[underdefpatroliter]->containsCoordinate(othervehicle->coordinate()))
             {
                 //qDebug() << "Vehicle :" << othervehicle->id() << " is under vehicle :" << vm->id();
                 replace = false;
@@ -226,26 +230,20 @@ void Stratege::_patrol(Vehicle* vm)
         if(replace)
         {
             _mapVehicle2VehicleAttribut->value(vm)->_defpatroliter -= 2;
-            qDebug() << "Vehicle: " << vm->id() << " descent to zone " << _mapVehicle2VehicleAttribut->value(vm)->_defpatroliter;
+            qDebug() << "Vehicle: " << vm->id() << " descent to zone " << _mapVehicle2VehicleAttribut->value(vm)->_defpatroliter+1;
             _mapVehicle2VehicleAttribut->value(vm)->_inpatrol = false;
         }
     }
 
 //    //Back to parol if outside of the zone
-//    if(_mapVehicle2VehicleAttribut->value(vm)->_inpatrol && !_zonePolygonDefense[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->containsCoordinate(vm->coordinate()))
+//    if(_mapVehicle2VehicleAttribut->value(vm)->_inpatrol && !_zoneDefenseRound1[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->containsCoordinate(vm->coordinate()))
 //    {
-//        QGeoCoordinate waypoint = _zonePolygonDefense[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center();
+//        QGeoCoordinate waypoint = _zoneDefenseRound1[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center();
 //        double alt = vm->homePosition().altitude() + waypoint.altitude();
 //        vm->guidedModeOrbit(waypoint, 10, alt);
 //        _mapVehicle2VehicleAttribut->value(vm)->_inpatrol = true;
 //        qDebug() << "Vehicle: " << vm->id() << " out of patrol zone : return to patrol mode | time: " << _time.secsTo(QTime::currentTime());
 //    }
-
-    //head towards the enemy drone that is at the same altitude
-    /*double rel_alt = vm->coordinate().altitude() - vm->homePosition().altitude();
-    double nmy_alt = _mapVehicle2VehicleAttribut->value(vm)->targetLonLatAltCoord().altitude();
-    if (nmy_alt < rel_alt+20 || nmy_alt > rel_alt-20)
-    {    }*/
 
 }
 
@@ -303,38 +301,57 @@ void Stratege::_removedVehicle(Vehicle* vehicle)
     qDebug() << _mapVehicle2VehicleAttribut->remove(vehicle);
 }
 
-void Stratege::setPolygonZoneFromController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zonePolygonDefense, QList<QGCMapPolygon*> zonePolygonAttack)
+void Stratege::setRound1ZoneFromController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapPolygon*> zoneDefenseRound1, QList<QGCMapPolygon*> zoneAttackRound1)
 {
-    qDebug() << "setPolygonZoneFromController";
+    qDebug() << "setRound1ZoneFromController";
     _mainZonePolygon = mainZonePolygon;
-    _zonePolygonDefense = zonePolygonDefense;
-    _zonePolygonAttack = zonePolygonAttack;
+    _zoneDefenseRound1 = zoneDefenseRound1;
+    _zoneAttackRound1 = zoneAttackRound1;
+    _isCircularZone = false;
 
-    emit sendPolygonToZoneController(mainZonePolygon, zonePolygonDefense, zonePolygonAttack);
+    emit sendRound1ToZoneController(mainZonePolygon, zoneDefenseRound1, zoneAttackRound1);
 }
 
-void Stratege::setCircleZoneFromController(QList<QGCMapCircle*> mainZoneCircle, QList<QGCMapCircle*> zoneCircleDefense, QList<QGCMapCircle*> zoneCircleAttack)
+void Stratege::setRound2ZoneFromController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapCircle*> zoneDefenseRound2, QList<QGCMapCircle*> zoneAttackRound2)
 {
-    qDebug() << "setCircleZoneFromController";
-    _mainZoneCircle = mainZoneCircle;
-    _zoneCircleDefense = zoneCircleDefense;
-    _zoneCircleAttack = zoneCircleAttack;
+    qDebug() << "setRound2ZoneFromController";
+     _mainZonePolygon = mainZonePolygon;
+    _zoneDefenseRound2 = zoneDefenseRound2;
+    _zoneAttackRound2 = zoneAttackRound2;
     _isCircularZone = true;
 
-    emit sendCircleToZoneController(mainZoneCircle, zoneCircleDefense, zoneCircleAttack);
+    emit sendRound2ToZoneController(mainZonePolygon, zoneDefenseRound2, zoneAttackRound2);
 }
 
-void Stratege::handleZoneControllerRequestPolygon()
+void Stratege::setRound3ZoneFromController(QList<QGCMapPolygon*> mainZonePolygon, QList<QGCMapCircle*> zoneDefenseRound3, QList<QGCMapCircle*> zoneAttackRound3)
 {
-    qDebug() << "handleZoneControllerRequestPolygon";
-    emit sendPolygonToZoneController(_mainZonePolygon, _zonePolygonDefense, _zonePolygonAttack);
+    qDebug() << "setRound3ZoneFromController";
+     _mainZonePolygon = mainZonePolygon;
+    _zoneDefenseRound3 = zoneDefenseRound3;
+    _zoneAttackRound3 = zoneAttackRound3;
+    _isCircularZone = true;
+
+    emit sendRound3ToZoneController(mainZonePolygon, zoneDefenseRound3, zoneAttackRound3);
+}
+
+void Stratege::handleZoneControllerRequestRound1()
+{
+    qDebug() << "handleZoneControllerRequestRound1";
+    emit sendRound1ToZoneController(_mainZonePolygon, _zoneDefenseRound1, _zoneAttackRound1);
     _isCircularZone = false;
 }
 
-void Stratege::handleZoneControllerRequestCircle()
+void Stratege::handleZoneControllerRequestRound2()
 {
-    qDebug() << "handleZoneControllerRequestCircle";
-    emit sendCircleToZoneController(_mainZoneCircle, _zoneCircleDefense, _zoneCircleAttack);
+    qDebug() << "handleZoneControllerRequestRound2";
+    emit sendRound2ToZoneController(_mainZonePolygon, _zoneDefenseRound2, _zoneAttackRound2);
+    _isCircularZone = true;
+}
+
+void Stratege::handleZoneControllerRequestRound3()
+{
+    qDebug() << "handleZoneControllerRequestRound3";
+    emit sendRound3ToZoneController(_mainZonePolygon, _zoneDefenseRound3, _zoneAttackRound3);
     _isCircularZone = true;
 }
 
