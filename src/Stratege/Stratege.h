@@ -20,7 +20,12 @@ class MAVLinkProtocol;
 class Vehicle;
 
 //Competition time
-#define COMPETITION_TIME 60
+#define COMPETITION_TIME 120
+#define DEFENSE_TIME 60
+#define PLACEMENT_TIME 100
+#define HOME_TIME 10
+#define TETRIS_TIME 40
+#define ATTACK_TIME 15
 
 //Zones
 #define DEFENSE_ZONE     0
@@ -60,6 +65,7 @@ public:
       int _attpatroliter;
       bool  _inpatrol;
       bool  _inattack;
+      bool _infinal;
 
 private:
       Vehicle* _vehicle;
@@ -113,7 +119,6 @@ private:
     //Member variables
     bool _abortMission;
     bool _startMission;
-    //bool _activeMission;
     QTime                               _time;
     QMap<Vehicle*, VehicleAttribut*>*   _mapVehicle2VehicleAttribut;                                                   //Assign to each Vehicle* an associated VehicleAttribut*
     QMap<QGeoCoordinate, QVector3D>*    _mapTargetsPositions2TargetsVelocities;

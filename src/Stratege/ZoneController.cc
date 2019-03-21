@@ -153,7 +153,7 @@ void ZoneController::addZoneDefenseRound2(int numberInAltitude, int radius)
 
     QGCMapPolygon* mainPolygon =        _zonePolygon.value<QGCMapPolygon*>(0);
     QGeoCoordinate mainCenter =         mainPolygon->center();
-    QGeoCoordinate defenseCenter =      mainCenter.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - LITTLE_CIRCLE_RADIUS, -90 - _rotation);
+    QGeoCoordinate defenseCenter =      mainCenter.atDistanceAndAzimuth(POLYGON_INFO_DEF_WIDTH + LITTLE_CIRCLE_RADIUS, -90 - _rotation);
 
     for (int i = 0; i < numberInAltitude; ++i)
     {
@@ -170,7 +170,7 @@ void ZoneController::addZoneAttackRound2(int numberInAltitude, int radius)
 
     QGCMapPolygon* mainPolygon =        _zonePolygon.value<QGCMapPolygon*>(0);
     QGeoCoordinate mainCenter =         mainPolygon->center();
-    QGeoCoordinate attackCenter =       mainCenter.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - LITTLE_CIRCLE_RADIUS, 90 - _rotation);
+    QGeoCoordinate attackCenter =       mainCenter.atDistanceAndAzimuth(POLYGON_INFO_DEF_WIDTH + LITTLE_CIRCLE_RADIUS, 90 - _rotation);
 
     for (int i = 0; i < numberInAltitude; ++i)
     {
@@ -190,12 +190,12 @@ void ZoneController::addZoneDefenseRound3(int numberInAltitude, double radius)
 
     for (int i = 0; i < numberInAltitude; ++i)
     {
-        QGeoCoordinate topCenter    = center.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - ROUND_3_CIRCLE_RADIUS, -90 - _rotation).atDistanceAndAzimuth(10, -_rotation);
+        QGeoCoordinate topCenter    = center.atDistanceAndAzimuth(POLYGON_INFO_DEF_WIDTH + ROUND_3_CIRCLE_RADIUS, -90 - _rotation).atDistanceAndAzimuth(15, -_rotation);
         topCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
         QGCMapCircle* zoneDefenseRound3 = new QGCMapCircle(topCenter, radius);
         _zoneDefenseRound3.append(zoneDefenseRound3);
 
-        QGeoCoordinate bottomCenter = center.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - ROUND_3_CIRCLE_RADIUS, -90 - _rotation).atDistanceAndAzimuth(10, -180 - _rotation);
+        QGeoCoordinate bottomCenter = center.atDistanceAndAzimuth(POLYGON_INFO_DEF_WIDTH + ROUND_3_CIRCLE_RADIUS, -90 - _rotation).atDistanceAndAzimuth(15, -180 - _rotation);
         bottomCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
         zoneDefenseRound3 = new QGCMapCircle(bottomCenter, radius);
         _zoneDefenseRound3.append(zoneDefenseRound3);
@@ -212,12 +212,12 @@ void ZoneController::addZoneAttackRound3(int numberInAltitude, double radius)
 
     for (int i = 0; i < numberInAltitude; ++i)
     {
-        QGeoCoordinate topCenter    = center.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - ROUND_3_CIRCLE_RADIUS, 90 - _rotation).atDistanceAndAzimuth(15, -_rotation);
+        QGeoCoordinate topCenter    = center.atDistanceAndAzimuth(POLYGON_INFO_DEF_WIDTH + ROUND_3_CIRCLE_RADIUS, 90 - _rotation).atDistanceAndAzimuth(15, -_rotation);
         topCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
         QGCMapCircle* zoneAttackRound3 = new QGCMapCircle(topCenter, radius);
         _zoneAttackRound3.append(zoneAttackRound3);
 
-        QGeoCoordinate bottomCenter = center.atDistanceAndAzimuth(2 * POLYGON_INFO_DEF_WIDTH - ROUND_3_CIRCLE_RADIUS, 90 - _rotation).atDistanceAndAzimuth(15, -180 - _rotation);
+        QGeoCoordinate bottomCenter = center.atDistanceAndAzimuth( POLYGON_INFO_DEF_WIDTH + ROUND_3_CIRCLE_RADIUS, 90 - _rotation).atDistanceAndAzimuth(15, -180 - _rotation);
         bottomCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
         zoneAttackRound3 = new QGCMapCircle(bottomCenter, radius);
         _zoneAttackRound3.append(zoneAttackRound3);

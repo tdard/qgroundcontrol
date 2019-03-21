@@ -10,7 +10,7 @@
 
 #include "Stratege.h"
 
-#define MAX_ALTITUDE            120
+#define MAX_ALTITUDE            80
 #define POLYGON_INFO_WIDTH      100
 #define POLYGON_INFO_HEIGHT     100
 #define POLYGON_INFO_DEF_WIDTH  25

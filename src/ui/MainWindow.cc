@@ -26,6 +26,9 @@
 #include <QDockWidget>
 #include <QMenuBar>
 #include <QDialog>
+// GDP - Start
+#include <QMediaPlayer>
+// GDP - Stop
 
 #include "QGC.h"
 #include "MAVLinkProtocol.h"
@@ -41,6 +44,7 @@
 #include "UAS.h"
 #include "QGCImageProvider.h"
 #include "QGCCorePlugin.h"
+
 
 #ifndef __mobile__
 #include "Linecharts.h"
@@ -416,6 +420,11 @@ void MainWindow::configureWindowName()
 void MainWindow::startMission()
 {
     qDebug() << "Slot startMission triggered";
+    QMediaPlayer* player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("/home/ubuntu/qgroundcontrol/vador.mp3"));
+    player->setVolume(50);
+    player->play();
+
     emit startMissionSignal();
 }
 
