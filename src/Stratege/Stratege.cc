@@ -1,3 +1,5 @@
+//FINAL VERSION
+
 #include "Stratege.h"
 #include "AutoPilotPlugin.h"
 #include "MAVLinkProtocol.h"
@@ -192,11 +194,17 @@ void Stratege::startMission()
         vm->setArmed(true);
 
         double alt = 2;
-        if(!_zoneAttackRound1.empty() && vm->id() <= 6) { alt = _zoneDefenseRound1[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center().altitude(); }
+//        if(!_zoneAttackRound1.empty() && vm->id() <= 6) { alt = _zoneDefenseRound1[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center().altitude(); }
+//        if(!_zoneAttackRound1.empty() && vm->id() > 6) { alt = _zoneAttackRound1[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
+//        if(!_zoneAttackRound2.empty() && vm->id() <= 6) { alt = _zoneDefenseRound2[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center().altitude(); }
+//        if(!_zoneAttackRound2.empty() && vm->id() > 6) { alt = _zoneAttackRound2[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
+//        if(!_zoneAttackRound3.empty() && vm->id() <= 6) { alt = _zoneDefenseRound3[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center().altitude(); }
+//        if(!_zoneAttackRound3.empty() && vm->id() > 6) { alt = _zoneAttackRound3[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
+        if(!_zoneAttackRound1.empty() && vm->id() <= 6) { alt = _zoneAttackRound1[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
         if(!_zoneAttackRound1.empty() && vm->id() > 6) { alt = _zoneAttackRound1[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
-        if(!_zoneAttackRound2.empty() && vm->id() <= 6) { alt = _zoneDefenseRound2[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center().altitude(); }
+        if(!_zoneAttackRound2.empty() && vm->id() <= 6) { alt = _zoneAttackRound2[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
         if(!_zoneAttackRound2.empty() && vm->id() > 6) { alt = _zoneAttackRound2[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
-        if(!_zoneAttackRound3.empty() && vm->id() <= 6) { alt = _zoneDefenseRound3[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center().altitude(); }
+        if(!_zoneAttackRound3.empty() && vm->id() <= 6) { alt = _zoneAttackRound3[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
         if(!_zoneAttackRound3.empty() && vm->id() > 6) { alt = _zoneAttackRound3[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
 
         vm->firmwarePlugin()->guidedModeTakeoff(vm, alt);
@@ -362,18 +370,23 @@ void Stratege::updateData(mavlink_message_t message)
             if (vm->id() <= 6) //vm->vehicleType() == MAV_TYPE_HEXAROTOR
             {
                 double limalt = 1;
-                if(!_zoneAttackRound1.empty()) { limalt = _zoneDefenseRound1[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center().altitude(); }
-                if(!_zoneAttackRound2.empty()) { limalt = _zoneDefenseRound2[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center().altitude(); }
-                if(!_zoneAttackRound3.empty()) { limalt = _zoneDefenseRound3[_mapVehicle2VehicleAttribut->value(vm)->_defpatroliter]->center().altitude(); }
+                if(!_zoneAttackRound1.empty()) { limalt = _zoneAttackRound1[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
+                if(!_zoneAttackRound2.empty()) { limalt = _zoneAttackRound2[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
+                if(!_zoneAttackRound3.empty()) { limalt = _zoneAttackRound3[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
                 if (vm->altitudeRelative()->rawValue() >= limalt-1 && _time.secsTo(QTime::currentTime()) < DEFENSE_TIME) { _patrol(vm); }
                 int ID = vm->id();
                 if (_time.secsTo(QTime::currentTime()) >= DEFENSE_TIME + 3*ID) { _attack(vm); }
             }
 
             //ATTACK DRONES
+
             if (vm->id() > 6) //vm->vehicleType() == MAV_TYPE_QUADROTOR
             {
-                if (_time.secsTo(QTime::currentTime()) >= ATTACK_TIME) { _attack(vm); }
+                double limalt = 1;
+                if(!_zoneAttackRound1.empty()) { limalt = _zoneAttackRound1[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
+                if(!_zoneAttackRound2.empty()) { limalt = _zoneAttackRound2[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
+                if(!_zoneAttackRound3.empty()) { limalt = _zoneAttackRound3[_mapVehicle2VehicleAttribut->value(vm)->_attpatroliter]->center().altitude(); }
+                if (vm->altitudeRelative()->rawValue() >= limalt-1) { _attack(vm); }
             }
 
             //DEFINE THE HOME IN CASE OF COM_LOSS #thank you Utkarsh
