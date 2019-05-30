@@ -1187,6 +1187,10 @@ signals:
     void notifyStratege(mavlink_message_t message);
     // GDP - Stop
 
+    // UIS - Start
+    //Send status text in json
+    // UIS - Stop
+
 private slots:
     void _mavlinkMessageReceived(LinkInterface* link, mavlink_message_t message);
     void _linkInactiveOrDeleted(LinkInterface* link);

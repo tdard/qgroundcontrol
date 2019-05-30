@@ -237,6 +237,10 @@ Vehicle::Vehicle(LinkInterface*             link,
     connect(this, &Vehicle::notifyStratege, _stratege, &Stratege::updateData);
     // GDP - Stop
 
+    // UIS - Start
+    //_uisController
+    // UIS - Stop
+
     _uas = new UAS(_mavlink, this, _firmwarePluginManager);
 
     connect(_uas, &UAS::imageReady,                     this, &Vehicle::_imageReady);
@@ -932,7 +936,9 @@ void Vehicle::_handleStatusText(mavlink_message_t& message, bool longVersion)
     }
     b[b.length()-1] = '\0';
     messageText = QString(b);
+    // UIS - Start
 
+    // UIS - Stop
     bool skipSpoken = false;
     bool ardupilotPrearm = messageText.startsWith(QStringLiteral("PreArm"));
     bool px4Prearm = messageText.startsWith(QStringLiteral("preflight"), Qt::CaseInsensitive) && severity >= MAV_SEVERITY_CRITICAL;

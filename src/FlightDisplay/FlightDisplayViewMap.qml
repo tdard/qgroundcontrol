@@ -53,6 +53,9 @@ FlightMap {
     readonly property var _stratege:            QGroundControl.stratege
     property var    _zoneController:            masterZoneController
     // GDP - Stop
+    // UIS - Start
+    property var    _uisController:             masterUISController
+    // UIS - Stop
     property var    _activeVehicleCoordinate:   _activeVehicle ? _activeVehicle.coordinate : QtPositioning.coordinate()
     property real   _toolButtonTopMargin:       parent.height - ScreenTools.availableHeight + (ScreenTools.defaultFontPixelHeight / 2)
     property bool   _airspaceEnabled:           QGroundControl.airmapSupported ? (QGroundControl.settingsManager.airMapSettings.enableAirMap.rawValue && QGroundControl.airspaceManager.connected): false
@@ -273,6 +276,15 @@ FlightMap {
         planView:               false
     }
     // GDP - Stop
+
+    // UIS - Start
+    UISController {
+        id: masterUISController
+    }
+
+    //LetterVisuals
+
+    // UIS - Stop
 
     // Allow custom builds to add map items
     CustomMapItems {

@@ -4,11 +4,11 @@
 
 
 #include <QObject>
-
-
 #include "Vehicle.h"
 #include "MultiVehicleManager.h"
 #include "QGCLoggingCategory.h"
+
+#include "JsonHelper.h"
 
 class UISController: public QObject
 {
@@ -16,5 +16,8 @@ class UISController: public QObject
 
 public:
     UISController(QObject* parent = NULL);
+
+//public slots:
+//    void receiveStatusTextInJson();
 };
 #endif

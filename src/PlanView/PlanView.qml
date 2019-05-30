@@ -62,6 +62,9 @@ QGCView {
     // GDP - Start
     property var    _zoneController:                    masterZoneController
     // GDP - Stop
+    // UIS - Start
+    property var    _uisController:                     masterUISController
+    // UIS - Stop
     property bool   _lightWidgetBorders:                editorMap.isSatelliteMap
     property bool   _addWaypointOnClick:                false
     property bool   _addROIOnClick:                     false
@@ -283,7 +286,7 @@ QGCView {
             fileDialog.openForSave()
         }
     }
-
+    // GDP - Start
     ZoneController {
         id: masterZoneController
 
@@ -291,6 +294,14 @@ QGCView {
             start(_stratege, false /* flyView */)
         }
     }
+    // GDP - Stop
+
+    // UIS - Start
+    UISController {
+        id: masterUISController
+    }
+
+    // UIS - Stop
 
     Connections {
         target: _missionController
