@@ -378,6 +378,9 @@ INCLUDEPATH += \
     # GDP - Start
     src/Stratege \
     # GDP - Stop
+    # UIS - Start
+    src/UIS \
+    # UIS - Stop
 
 FORMS += \
     src/ui/MainWindow.ui \
@@ -632,6 +635,9 @@ HEADERS += \
     # GDP - Start
     src/Stratege/ZoneController.h \
     # GDP - Stop
+    # UIS - Start
+    src/UIS/UISController.h \
+    # UIS - Stop
 
 
 AndroidBuild {
@@ -836,6 +842,9 @@ SOURCES += \
     # GDP - Start
     src/Stratege/ZoneController.cc \
     # GDP - Stop
+    # UIS - Start
+    src/UIS/UISController.cc \
+    # UIS - Stop
     src/UTM.cpp \
 
 DebugBuild {
@@ -920,6 +929,9 @@ INCLUDEPATH += \
     # GDP - Start
     src/Stratege \
     #GDP - Stop
+    # UIS - Start
+    src/UIS \
+    # UIS - Stop
 
 HEADERS+= \
     src/AutoPilotPlugins/AutoPilotPlugin.h \

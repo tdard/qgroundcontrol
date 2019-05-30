@@ -187,18 +187,19 @@ void ZoneController::addZoneDefenseRound3(int numberInAltitude, double radius)
 
     QGCMapPolygon* mainPolygon =        _zonePolygon.value<QGCMapPolygon*>(0);
     QGeoCoordinate center =             mainPolygon->center();
-
+    qDebug() << "Defense Zones Round 3: 3 layers of altitude";
     for (int i = 0; i < numberInAltitude; ++i)
     {
         QGeoCoordinate topCenter    = center.atDistanceAndAzimuth(POLYGON_INFO_DEF_WIDTH + ROUND_3_CIRCLE_RADIUS, -90 - _rotation).atDistanceAndAzimuth(15, -_rotation);
         topCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
         QGCMapCircle* zoneDefenseRound3 = new QGCMapCircle(topCenter, radius);
         _zoneDefenseRound3.append(zoneDefenseRound3);
-
+        qDebug() << "Rotation: " << _rotation << "Left distance from center: " << POLYGON_INFO_DEF_WIDTH + ROUND_3_CIRCLE_RADIUS << "Up distance from center: " << 15 << "Relative Altitude: " << topCenter.altitude();
         QGeoCoordinate bottomCenter = center.atDistanceAndAzimuth(POLYGON_INFO_DEF_WIDTH + ROUND_3_CIRCLE_RADIUS, -90 - _rotation).atDistanceAndAzimuth(15, -180 - _rotation);
         bottomCenter.setAltitude((i + 0.5)*(MAX_ALTITUDE / numberInAltitude));
         zoneDefenseRound3 = new QGCMapCircle(bottomCenter, radius);
         _zoneDefenseRound3.append(zoneDefenseRound3);
+        qDebug() << "Rotation: " << _rotation << "Left distance from center: " << POLYGON_INFO_DEF_WIDTH + ROUND_3_CIRCLE_RADIUS << "Up distance from center: " << -15 << "Relative Altitude: " << bottomCenter.altitude();
     }
 }
 

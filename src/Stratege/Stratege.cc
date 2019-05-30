@@ -213,7 +213,7 @@ void Stratege::startMission()
 
     }
     _startMission = true;
-    qDebug() << "\n -MISSION STARTED-";
+    qDebug() << "\n Stratege: -MISSION STARTED-";
 }
 
 void Stratege::_attack(Vehicle* vm)
@@ -515,7 +515,7 @@ void Stratege::_parse(mavlink_message_t message)    //To modify, does not work a
             {
                 if(vm->id() == message.sysid)
                 {
-//                    qDebug() << "SERVO_OUTPUT_RAW message received";
+                    qDebug() << "SERVO_OUTPUT_RAW message received";
                     //TODO: Update Servo Outputs of AUX or MAIN using _mapVehicle2VehicleAttribut->value(vm)
 //                    if (servo_output_raw.port == 0){ _mapVehicle2VehicleAttribut->value(vm)->setMainServo(servo_output_raw) = servo_output_raw; }
 //                    else {_mapVehicle2VehicleAttribut->value(vm)->setAuxServo(servo_output_raw) = ;}

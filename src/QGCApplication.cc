@@ -93,6 +93,9 @@
 // GDP - Start
 #include "ZoneController.h"
 // GDP - Stop
+// UIS - Start
+#include "UISController.h"
+// UIS - Stop
 #ifndef NO_SERIAL_LINK
 #include "SerialLink.h"
 #endif
@@ -131,7 +134,7 @@ const char* QGCApplication::_lightStyleFile         = ":/res/styles/style-light.
 // GDP - Start
 #ifdef  MAVLINK_COMM_NUM_BUFFERS
 #undef  MAVLINK_COMM_NUM_BUFFERS
-#define MAVLINK_COMM_NUM_BUFFERS 32
+#define MAVLINK_COMM_NUM_BUFFERS 64
 #endif
 // GDP - Stop
 
@@ -454,6 +457,9 @@ void QGCApplication::_initCommon(void)
     // GDP - Start
     qmlRegisterType<ZoneController>                 (kQGCControllers,                       1, 0, "ZoneController");
     // GDP - Stop
+    // UIS - Start
+    qmlRegisterType<UISController>                  (kQGCControllers,                       1, 0, "UISController");
+    // UIS - Stop
     qmlRegisterType<ValuesWidgetController>         (kQGCControllers,                       1, 0, "ValuesWidgetController");
     qmlRegisterType<QGCFileDialogController>        (kQGCControllers,                       1, 0, "QGCFileDialogController");
     qmlRegisterType<RCChannelMonitorController>     (kQGCControllers,                       1, 0, "RCChannelMonitorController");

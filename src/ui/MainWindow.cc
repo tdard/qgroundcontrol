@@ -421,7 +421,7 @@ void MainWindow::startMission()
 {
     qDebug() << "Slot startMission triggered";
     QMediaPlayer* player = new QMediaPlayer;
-    player->setMedia(QUrl::fromLocalFile("/home/ubuntu/qgroundcontrol/vador.mp3"));
+    player->setMedia(QUrl::fromLocalFile("/home/tristan/qgroundcontrol/vador.mp3"));
     player->setVolume(50);
     player->play();
 
