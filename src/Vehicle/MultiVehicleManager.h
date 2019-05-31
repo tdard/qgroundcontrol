@@ -25,7 +25,9 @@ class FollowMe;
 class JoystickManager;
 class QGCApplication;
 class MAVLinkProtocol;
-
+// UIS - Start
+class UISController;
+// UIS - Stop
 Q_DECLARE_LOGGING_CATEGORY(MultiVehicleManagerLog)
 
 class MultiVehicleManager : public QGCTool
@@ -52,7 +54,7 @@ public:
     Q_INVOKABLE Vehicle* getVehicleById(int vehicleId);
 
     UAS* activeUas(void) { return _activeVehicle ? _activeVehicle->uas() : NULL; }
-
+    UISController* uisController(void) { return _uisController; }
     // Property accessors
 
     bool activeVehicleAvailable(void) { return _activeVehicleAvailable; }
@@ -115,7 +117,9 @@ private:
     FirmwarePluginManager*      _firmwarePluginManager;
     JoystickManager*            _joystickManager;
     MAVLinkProtocol*            _mavlinkProtocol;
-
+    // UIS - Start
+    UISController*              _uisController;
+    // UIS - Stop
     QTimer              _gcsHeartbeatTimer;             ///< Timer to emit heartbeats
     bool                _gcsHeartbeatEnabled;           ///< Enabled/disable heartbeat emission
     static const int    _gcsHeartbeatRateMSecs = 1000;  ///< Heartbeat rate

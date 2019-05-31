@@ -33,11 +33,14 @@ MultiVehicleManager::MultiVehicleManager(QGCApplication* app, QGCToolbox* toolbo
     : QGCTool(app, toolbox)
     , _activeVehicleAvailable(false)
     , _parameterReadyVehicleAvailable(false)
-    , _activeVehicle(NULL)
-    , _offlineEditingVehicle(NULL)
-    , _firmwarePluginManager(NULL)
-    , _joystickManager(NULL)
-    , _mavlinkProtocol(NULL)
+    , _activeVehicle(nullptr)
+    , _offlineEditingVehicle(nullptr)
+    , _firmwarePluginManager(nullptr)
+    , _joystickManager(nullptr)
+    , _mavlinkProtocol(nullptr)
+    // UIS - Start
+    , _uisController(nullptr)
+    // UIS - Stop
     , _gcsHeartbeatEnabled(true)
 {
     QSettings settings;

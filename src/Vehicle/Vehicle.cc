@@ -17,6 +17,10 @@
 // GDP - Start
 #include "Stratege.h"
 // GDP - Stop
+// UIS - Start
+#include "JsonHelper.h"
+#include "UISController.h"
+// UIS - Stop
 #include "FirmwarePluginManager.h"
 #include "LinkManager.h"
 #include "FirmwarePlugin.h"
@@ -239,6 +243,7 @@ Vehicle::Vehicle(LinkInterface*             link,
 
     // UIS - Start
     //_uisController
+    connect(this, &Vehicle::sendStatusText2UISController, _toolbox->multiVehicleManager()->uisController(), &UISController::receiveStatusTextFromMVM);
     // UIS - Stop
 
     _uas = new UAS(_mavlink, this, _firmwarePluginManager);
@@ -935,10 +940,12 @@ void Vehicle::_handleStatusText(mavlink_message_t& message, bool longVersion)
         severity = mavlink_msg_statustext_get_severity(&message);
     }
     b[b.length()-1] = '\0';
-    messageText = QString(b);
     // UIS - Start
-
+    QJsonDocument jsonDoc;
+    QString errorString;
+    if (JsonHelper::isJsonFile(b, jsonDoc, errorString)) { emit sendStatusText2UISController(jsonDoc); }
     // UIS - Stop
+    messageText = QString(b);
     bool skipSpoken = false;
     bool ardupilotPrearm = messageText.startsWith(QStringLiteral("PreArm"));
     bool px4Prearm = messageText.startsWith(QStringLiteral("preflight"), Qt::CaseInsensitive) && severity >= MAV_SEVERITY_CRITICAL;

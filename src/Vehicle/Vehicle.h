@@ -24,6 +24,9 @@
 // GDP - Start
 #include "Stratege.h"
 // GDP - Stop
+// UIS - Start
+#include "QJsonDocument"
+// UIS - Stop
 
 class UAS;
 class UASInterface;
@@ -1188,7 +1191,7 @@ signals:
     // GDP - Stop
 
     // UIS - Start
-    //Send status text in json
+    void sendStatusText2UISController(QJsonDocument jsonDoc);
     // UIS - Stop
 
 private slots:
